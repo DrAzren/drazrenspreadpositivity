@@ -1,0 +1,708 @@
+<!doctype html>
+<!--
+  Dr. Azren | Spread Positivity — Episode 001 "Serangan Panik" (Alarm Kereta)
+  Whiteboard 2.0 — SOURCE TEMPLATE. Do not edit index.html directly:
+  run  python3 ../../tools/build_episode.py  which injects the caption track
+  (generated from ../05_voiceover_words.json) into the <!--@CAPTIONS--> and
+  /*@CAPTION_TWEENS*/ markers.
+  All times are absolute seconds. Narration starts at VO=0.3 s.
+-->
+<html lang="ms" data-composition-variables='[
+  {"id":"episodeTitle","type":"string","label":"Episode title","default":"Serangan Panik"},
+  {"id":"brandName","type":"string","label":"Brand","default":"Dr. Azren | Spread Positivity"},
+  {"id":"useAiClips","type":"boolean","label":"Use Higgsfield inset clips","default":true}
+]'>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<style>
+:root{
+  --ink:#16181D; --navy:#142B49; --teal:#12B8A6; --sky:#42A5F5; --coral:#FF6D6D;
+  --yellow:#FFC857; --lavender:#A78BFA; --board:#F9FAFB; --board-shadow:#E6E9EE;
+  --coral-text:#C8323A; --teal-text:#0B7468; --sky-text:#1F63C2; --lavender-text:#6D4FD8;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--board)}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:Poppins,sans-serif;color:var(--navy)}
+.full{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.art{position:absolute;overflow:visible}
+.ink{stroke:#16181D;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+.ink5{stroke:#16181D;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.ink:not([fill]),.ink5:not([fill]){fill:none}
+.draw{stroke-dasharray:1;stroke-dashoffset:0}
+.title{position:absolute;left:120px;width:768px;text-align:center;font-weight:900;text-transform:uppercase;line-height:1.02;letter-spacing:-1px}
+.t-xl{font-size:118px}.t-l{font-size:96px}.t-m{font-size:76px}.t-s{font-size:58px}
+.coral{color:var(--coral-text)}.teal{color:var(--teal-text)}.navy{color:var(--navy)}.lav{color:var(--lavender-text)}.skyt{color:var(--sky-text)}
+.swipe{background:linear-gradient(transparent 18%,var(--yellow) 18%,var(--yellow) 88%,transparent 88%);padding:0 14px;border-radius:6px}
+.label{position:absolute;font-family:Nunito,sans-serif;font-weight:800;font-size:44px;color:var(--navy);white-space:nowrap}
+.foot{position:absolute;left:120px;width:660px;text-align:center;font-family:Inter,sans-serif;font-size:28px;color:rgba(20,43,73,.72)}
+.card{position:absolute;background:#fff;border:6px solid var(--ink);border-radius:34px}
+.char{position:absolute;display:block}
+/* captions */
+.cap{position:absolute;left:120px;bottom:678px;width:660px;text-align:center;overflow:visible}
+.low{left:120px;width:660px}
+.cap-in{display:inline-block;max-width:660px;padding:8px 22px 12px;border-radius:22px;background:rgba(249,250,251,.94);
+  font-weight:700;font-size:56px;line-height:1.12;color:var(--navy);box-shadow:0 4px 0 rgba(20,43,73,.10)}
+.cap .kw-c{color:var(--coral-text)} .cap .kw-t{color:var(--teal-text)}
+.cap .kw-y{background:linear-gradient(transparent 22%,var(--yellow) 22%,var(--yellow) 90%,transparent 90%);padding:0 6px;border-radius:4px}
+/* brand bug */
+#bug{position:absolute;left:120px;top:244px;display:flex;align-items:center;gap:12px;font-weight:700;font-size:34px;color:var(--navy);opacity:.82}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="80.5" data-width="1080" data-height="1920">
+
+<!-- ===================== SHARED DEFS ===================== -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <pattern id="hatch" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)">
+      <line x1="0" y1="0" x2="0" y2="14" stroke="#fff" stroke-width="3" stroke-opacity=".28"/>
+    </pattern>
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.5"/>
+    </filter>
+    <filter id="paper" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="3"/>
+      <feColorMatrix values="0 0 0 0 0.08  0 0 0 0 0.1  0 0 0 0 0.15  0 0 0 0.05 0"/>
+    </filter>
+    <filter id="soft"><feGaussianBlur stdDeviation="40"/></filter>
+    <!-- KAWAN (everyday Malaysian man) — original rig, whiteboard style: skin unfilled like the mascot sheet -->
+    <g id="kawan-body">
+      <path d="M-235 330 L-228 250 C-215 160 -125 118 -40 112 L40 112 C125 118 215 160 228 250 L235 330 Z" fill="var(--sky)"/>
+      <path d="M-235 330 L-228 250 C-215 160 -125 118 -40 112 L40 112 C125 118 215 160 228 250 L235 330 Z" fill="url(#hatch)"/>
+      <path class="ink" d="M-235 330 L-228 250 C-215 160 -125 118 -40 112 L40 112 C125 118 215 160 228 250 L235 330"/>
+      <path class="ink5" d="M-40 112 L0 168 L40 112 M-150 175 C-140 230 -150 290 -160 330 M150 175 C140 230 150 290 160 330"/>
+      <path d="M-42 112 L-42 60 C-42 50 42 50 42 60 L42 112 L0 166 Z" fill="#fff"/>
+      <path class="ink5" d="M-42 58 L-42 112 M42 58 L42 112"/>
+    </g>
+    <g id="kawan-head">
+      <ellipse cx="-112" cy="-6" rx="22" ry="32" fill="#fff" class="ink5"/>
+      <ellipse cx="112" cy="-6" rx="22" ry="32" fill="#fff" class="ink5"/>
+      <path d="M-112 -20 C-118 70 -70 128 0 128 C70 128 118 70 112 -20 C110 -120 60 -158 0 -158 C-60 -158 -110 -120 -112 -20 Z" fill="#fff" class="ink"/>
+      <path d="M-120 -30 C-132 -128 -70 -186 4 -184 C80 -186 134 -130 120 -34 C112 -70 96 -88 70 -96 C40 -84 -10 -84 -40 -100 C-70 -92 -104 -72 -120 -30 Z" fill="var(--ink)"/>
+      <path d="M-60 -168 C-40 -190 -10 -196 20 -192" stroke="#fff" stroke-width="4" stroke-opacity=".35" fill="none"/>
+      <path class="ink5" d="M-6 18 C-12 40 -14 52 0 56" />
+      <path d="M-78 52 l10 -8 M-62 54 l10 -8 M62 52 l10 -8 M78 54 l10 -8" stroke="var(--coral)" stroke-width="4" stroke-linecap="round" opacity=".55"/>
+    </g>
+    <!-- simple person icon for pictograms -->
+    <g id="person">
+      <circle cx="0" cy="-58" r="30" fill="#fff" class="ink5"/>
+      <path d="M-46 70 L-46 10 C-46 -14 -26 -22 0 -22 C26 -22 46 -14 46 10 L46 70 Z" fill="#fff" class="ink5"/>
+    </g>
+    <!-- side-view compact hatchback (generic, no brand) -->
+    <g id="car-side">
+      <path d="M-330 60 L-330 0 C-330 -30 -310 -46 -270 -52 L-180 -64 L-110 -140 C-96 -156 -80 -160 -40 -160 L120 -160 C150 -160 168 -150 186 -126 L240 -60 L300 -46 C330 -40 340 -20 340 10 L340 60 Z" fill="var(--teal)"/>
+      <path d="M-330 60 L-330 0 C-330 -30 -310 -46 -270 -52 L-180 -64 L-110 -140 C-96 -156 -80 -160 -40 -160 L120 -160 C150 -160 168 -150 186 -126 L240 -60 L300 -46 C330 -40 340 -20 340 10 L340 60 Z" fill="url(#hatch)"/>
+      <path class="ink draw car-line" pathLength="1" d="M-330 60 L-330 0 C-330 -30 -310 -46 -270 -52 L-180 -64 L-110 -140 C-96 -156 -80 -160 -40 -160 L120 -160 C150 -160 168 -150 186 -126 L240 -60 L300 -46 C330 -40 340 -20 340 10 L340 60 Z"/>
+      <path d="M-160 -68 L-100 -132 C-92 -140 -84 -142 -60 -142 L30 -142 L30 -68 Z" fill="#DDF2FB" class="ink5"/>
+      <path d="M50 -68 L50 -142 L118 -142 C140 -142 150 -136 162 -120 L206 -68 Z" fill="#DDF2FB" class="ink5"/>
+      <path class="ink5" d="M40 -60 L40 50 M-60 -20 L-30 -20 M90 -20 L120 -20"/>
+      <circle cx="-210" cy="62" r="62" fill="var(--ink)"/><circle cx="-210" cy="62" r="28" fill="#cfd5dd"/>
+      <circle cx="230" cy="62" r="62" fill="var(--ink)"/><circle cx="230" cy="62" r="28" fill="#cfd5dd"/>
+    </g>
+    <g id="cat-sit">
+      <path d="M-50 60 C-70 10 -60 -50 -10 -60 C40 -66 66 -20 60 60 Z" fill="var(--yellow)" class="ink5"/>
+      <path d="M58 54 C110 54 120 10 96 -8" class="ink5"/>
+      <circle cx="0" cy="-92" r="46" fill="var(--yellow)" class="ink5"/>
+      <path d="M-38 -118 L-34 -158 L-8 -132 Z M38 -118 L34 -158 L8 -132 Z" fill="var(--yellow)" class="ink5"/>
+      <circle cx="-16" cy="-96" r="5" fill="var(--ink)"/><circle cx="16" cy="-96" r="5" fill="var(--ink)"/>
+      <path d="M-6 -80 L0 -74 L6 -80 M-46 -84 L-70 -88 M-46 -76 L-70 -72 M46 -84 L70 -88 M46 -76 L70 -72" stroke="var(--ink)" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M-24 -40 l6 18 M0 -44 l0 20 M24 -40 l-6 18" stroke="#fff" stroke-width="4" stroke-opacity=".6" stroke-linecap="round"/>
+    </g>
+    <g id="cat-sleep">
+      <path d="M-110 40 C-120 -30 -50 -70 20 -64 C90 -60 120 -20 110 40 Z" fill="var(--yellow)" class="ink5"/>
+      <path d="M110 30 C120 60 40 70 -60 54" class="ink5"/>
+      <circle cx="-70" cy="0" r="40" fill="var(--yellow)" class="ink5"/>
+      <path d="M-100 -22 L-104 -58 L-80 -36 Z M-46 -26 L-36 -60 L-30 -30 Z" fill="var(--yellow)" class="ink5"/>
+      <path d="M-86 2 q8 6 16 0 M-60 2 q8 6 16 0" stroke="var(--ink)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    </g>
+  </defs>
+</svg>
+
+<!-- ===================== BOARD (untimed background) ===================== -->
+<div id="board" class="full" style="background:var(--board)">
+  <svg width="1080" height="1920" style="position:absolute;left:0;top:0">
+    <rect width="1080" height="1920" filter="url(#paper)"/>
+    <ellipse cx="220" cy="1580" rx="260" ry="70" fill="#E6E9EE" opacity=".55" filter="url(#soft)"/>
+    <ellipse cx="860" cy="300" rx="220" ry="50" fill="#E6E9EE" opacity=".45" filter="url(#soft)"/>
+    <ellipse cx="760" cy="1760" rx="300" ry="60" fill="#E6E9EE" opacity=".5" filter="url(#soft)"/>
+  </svg>
+</div>
+<!-- brand frame for hook + outro -->
+<div id="frame" class="clip full" data-start="0" data-duration="5.9" data-track-index="1">
+  <div id="frame-in" class="full" style="border:14px solid var(--navy);border-radius:38px;left:22px;top:22px;width:1036px;height:1876px;opacity:.9"></div>
+</div>
+
+<!-- ===================== S01 HOOK: car-front (0–5.9) ===================== -->
+<div id="s01" class="clip scene" data-start="0" data-duration="5.9" data-track-index="2">
+  <div id="s01-title" class="title t-l" style="top:322px">Tiba-tiba <span class="coral">dada ketat?</span></div>
+  <div id="s01-card" class="card" style="left:200px;top:520px;width:680px;height:680px;overflow:hidden">
+    <svg id="s01-art" width="668" height="668" viewBox="0 0 748 748" style="position:absolute;left:0;top:0">
+      <defs><linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2B3E66"/><stop offset=".65" stop-color="#F48A7A"/><stop offset="1" stop-color="#FFC857"/></linearGradient></defs>
+      <rect width="748" height="748" fill="url(#dusk)"/>
+      <path d="M0 470 L60 470 L60 400 L120 400 L120 440 L190 440 L190 360 L240 360 L240 430 L330 430 L330 380 L400 380 L400 450 L470 450 L470 330 L520 330 L520 420 L600 420 L600 390 L660 390 L660 450 L748 450 L748 748 L0 748 Z" fill="#20325A" opacity=".55"/>
+      <!-- brake-light reflections ahead -->
+      <g id="s01-bokeh" opacity=".85">
+        <circle cx="90" cy="300" r="22" fill="var(--coral)" opacity=".7"/><circle cx="150" cy="320" r="16" fill="var(--coral)" opacity=".55"/>
+        <circle cx="610" cy="290" r="24" fill="var(--coral)" opacity=".7"/><circle cx="670" cy="318" r="15" fill="var(--coral)" opacity=".5"/>
+        <circle cx="560" cy="330" r="12" fill="var(--yellow)" opacity=".6"/>
+      </g>
+      <!-- windscreen frame -->
+      <path d="M0 0 L748 0 L748 748 L0 748 Z M70 120 C200 84 548 84 678 120 L720 700 L28 700 Z" fill="#E7ECF2" fill-rule="evenodd"/>
+      <path class="ink" d="M70 120 C200 84 548 84 678 120 L720 700 L28 700 Z"/>
+      <!-- Kawan -->
+      <g id="kw1" transform="translate(374 430) scale(0.92)">
+        <use href="#kawan-body"/>
+        <g id="kw1-head"><use href="#kawan-head"/>
+          <g id="kw1-eyes-n"><ellipse cx="-42" cy="0" rx="9" ry="12" fill="var(--ink)"/><ellipse cx="42" cy="0" rx="9" ry="12" fill="var(--ink)"/></g>
+          <g id="kw1-eyes-w" opacity="0"><circle cx="-42" cy="0" r="20" fill="#fff" class="ink5"/><circle cx="42" cy="0" r="20" fill="#fff" class="ink5"/><circle cx="-42" cy="2" r="7" fill="var(--ink)"/><circle cx="42" cy="2" r="7" fill="var(--ink)"/></g>
+          <path id="kw1-brow-n" class="ink5" d="M-66 -34 C-54 -42 -34 -42 -22 -36 M22 -36 C34 -42 54 -42 66 -34"/>
+          <path id="kw1-brow-w" class="ink5" opacity="0" d="M-66 -30 C-54 -40 -36 -48 -22 -52 M22 -52 C36 -48 54 -40 66 -30"/>
+          <path id="kw1-mouth-n" class="ink5" d="M-22 82 C-8 88 8 88 22 82"/>
+          <ellipse id="kw1-mouth-o" cx="0" cy="86" rx="16" ry="20" fill="var(--ink)" opacity="0"/>
+          <g id="kw1-sweat" opacity="0"><path d="M110 -70 C100 -50 104 -36 114 -36 C124 -36 126 -50 110 -70 Z" fill="#BFE6FF" class="ink5"/></g>
+        </g>
+        <!-- hand on chest (fallback acting) -->
+        <g id="kw1-hand" opacity="0"><path d="M-70 210 C-80 180 -40 160 10 166 C50 170 60 196 40 214 C10 236 -50 236 -70 210 Z" fill="#fff" class="ink5"/><path class="ink5" d="M-30 176 L-24 214 M-4 172 L0 214 M20 174 L22 210"/></g>
+      </g>
+      <!-- steering wheel + dashboard -->
+      <path d="M28 700 L720 700 L748 748 L0 748 Z" fill="var(--navy)"/>
+      <path d="M170 748 C170 600 578 600 578 748" fill="none" stroke="var(--ink)" stroke-width="30" stroke-linecap="round"/>
+      <path d="M170 748 C170 600 578 600 578 748" fill="none" stroke="#3A4152" stroke-width="16" stroke-linecap="round"/>
+    </svg>
+    <!-- ECG line across the card -->
+    <svg id="s01-ecg" width="668" height="143" viewBox="0 0 748 160" style="position:absolute;left:0;top:464px">
+      <path id="s01-ecg-p" class="draw" pathLength="1" d="M0 90 L170 90 L200 90 L218 40 L238 140 L256 20 L276 120 L296 90 L380 90 L398 40 L418 140 L436 20 L456 120 L476 90 L560 90 L578 40 L598 140 L616 20 L636 120 L656 90 L748 90" fill="none" stroke="var(--coral)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div id="s01-k1" class="title t-l coral" style="top:322px;opacity:0">Jantung laju!</div>
+</div>
+<!-- H1: Higgsfield inset clip (Kawan raises hand to chest). Start frame = s01-card art at t=0. -->
+<video id="h1" class="clip" data-start="1.85" data-duration="4.05" data-playback-rate="1.2" data-track-index="3" muted playsinline
+  src="assets/clips/h1.mp4" style="position:absolute;left:206px;top:526px;width:668px;height:668px;border-radius:28px;object-fit:cover"></video>
+<div id="s01-over" class="clip scene" data-start="1.85" data-duration="4.05" data-track-index="4">
+  <svg width="668" height="143" viewBox="0 0 748 160" style="position:absolute;left:206px;top:990px">
+    <path id="s01-ecg2" class="draw" pathLength="1" d="M0 90 L170 90 L200 90 L218 40 L238 140 L256 20 L276 120 L296 90 L380 90 L398 40 L418 140 L436 20 L456 120 L476 90 L560 90 L578 40 L598 140 L616 20 L636 120 L656 90 L748 90" fill="none" stroke="var(--coral)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <div id="s01-k2" class="title t-l coral" style="top:322px;opacity:0;background:var(--board)">Rasa nak mati</div>
+</div>
+
+<!-- ===================== S02 "Pernah alami?" (5.9–7.2) ===================== -->
+<div id="s02" class="clip scene" data-start="5.9" data-duration="1.3" data-track-index="2">
+  <div id="s02-title" class="title t-xl" style="top:322px">Pernah <span class="swipe">alami?</span></div>
+  <img id="s02-doc" class="char" src="assets/char/bust_thoughtful.png" style="left:230px;top:500px;width:620px" />
+</div>
+
+<!-- ===================== S03 stat 1 in 8 (7.2–13.2) ===================== -->
+<div id="s03" class="clip scene" data-start="7.2" data-duration="6.0" data-track-index="2">
+  <div id="s03-title" class="title t-xl" style="top:322px">≈ 1 <span class="swipe">dalam</span> 8</div>
+  <svg width="1080" height="560" viewBox="90 -10 900 560" style="position:absolute;left:0;top:480px">
+    <g id="s03-p1" transform="translate(195 150)"><use href="#person"/></g>
+    <g id="s03-p2" transform="translate(425 150)"><use href="#person"/></g>
+    <g id="s03-p3" transform="translate(655 150)"><use href="#person"/></g>
+    <g id="s03-p4" transform="translate(885 150)"><use href="#person"/></g>
+    <g id="s03-p5" transform="translate(195 420)"><use href="#person"/></g>
+    <g id="s03-p6" transform="translate(425 420)"><use href="#person"/></g>
+    <g id="s03-p7" transform="translate(655 420)"><use href="#person"/></g>
+    <g id="s03-p8" transform="translate(885 420)">
+      <g id="s03-base"><circle cx="0" cy="-58" r="30" fill="#fff" class="ink5"/>
+      <path d="M-46 70 L-46 10 C-46 -14 -26 -22 0 -22 C26 -22 46 -14 46 10 L46 70 Z" fill="#fff" class="ink5"/></g>
+      <g id="s03-hit" opacity="0"><circle cx="0" cy="-58" r="30" fill="var(--coral)" class="ink5"/><path d="M-46 70 L-46 10 C-46 -14 -26 -22 0 -22 C26 -22 46 -14 46 10 L46 70 Z" fill="var(--coral)" class="ink5"/><path d="M-30 -110 l-14 -22 M0 -116 l0 -26 M30 -110 l14 -22" stroke="var(--coral)" stroke-width="6" stroke-linecap="round"/></g>
+    </g>
+  </svg>
+  <div id="s03-sub" class="title t-s teal low" style="top:960px;opacity:0;text-transform:none;font-weight:800;font-size:50px">Anda tak keseorangan.</div>
+  <div id="s03-foot" class="foot" style="top:430px;left:120px;width:768px">Kajian antarabangsa, orang dewasa di 25 negara (de Jonge et al., 2016)</div>
+</div>
+
+<!-- ===================== S04 car + shield + cat arrives (13.2–17.15) ===================== -->
+<div id="s04" class="clip scene" data-start="13.2" data-duration="3.95" data-track-index="2">
+  <div id="s04-title" class="title t-xl" style="top:322px">Alarm <span class="swipe">kereta</span></div>
+</div>
+<!-- shared car-side card for S04/S05/S08/S18. Art region = 760x760 card at (160,430). -->
+<div id="carcard" class="clip scene" data-start="13.2" data-duration="8.0" data-track-index="5">
+  <div id="carcard-box" class="card" style="left:200px;top:520px;width:680px;height:680px;overflow:hidden;border-color:transparent;background:transparent">
+    <svg id="carcard-art" width="668" height="668" viewBox="0 0 748 748" style="position:absolute;left:0;top:0">
+      <rect id="carcard-bg" width="748" height="748" fill="#fff" opacity="0"/>
+      <path d="M20 590 L728 590" class="ink5" stroke-dasharray="2 18"/>
+      <g id="car1" transform="translate(374 470) scale(0.95)">
+        <use href="#car-side"/>
+        <g id="car1-lights" opacity="0">
+          <circle cx="325" cy="-18" r="34" fill="var(--yellow)"/><circle cx="-322" cy="-14" r="30" fill="var(--coral)"/>
+          <circle cx="325" cy="-18" r="70" fill="var(--yellow)" opacity=".35"/><circle cx="-322" cy="-14" r="64" fill="var(--coral)" opacity=".35"/>
+        </g>
+        <g id="car1-shield" opacity="0" transform="translate(0 -250)">
+          <path d="M0 -70 L64 -46 C64 20 40 56 0 76 C-40 56 -64 20 -64 -46 Z" fill="var(--teal)" class="ink5"/>
+          <path d="M-26 0 L-6 22 L30 -20" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <g id="car1-waves" opacity="0" fill="none" stroke="var(--coral)" stroke-width="9" stroke-linecap="round">
+          <path d="M380 -90 C420 -50 420 20 380 60"/><path d="M420 -130 C480 -60 480 40 420 100"/>
+          <path d="M-380 -90 C-420 -50 -420 20 -380 60"/><path d="M-420 -130 C-480 -60 -480 40 -420 100"/>
+        </g>
+      </g>
+      <g transform="translate(110 530) scale(0.8)"><g id="cat1"><use href="#cat-sit"/></g></g>
+    </svg>
+  </div>
+  <div id="carcard-frame" class="card" style="left:200px;top:520px;width:680px;height:680px;background:transparent;opacity:0"></div>
+</div>
+<!-- H2: Higgsfield inset clip (cat hops on bonnet, lights flash). Start frame = carcard art at t=16.8 -->
+<video id="h2" class="clip" data-start="17.3" data-duration="3.9" data-playback-rate="1.15" data-track-index="6" muted playsinline
+  src="assets/clips/h2.mp4" style="position:absolute;left:206px;top:526px;width:668px;height:668px;border-radius:28px;object-fit:cover"></video>
+
+<!-- ===================== S05 cat + alarm screams (17.15–21.2) ===================== -->
+<div id="s05" class="clip scene" data-start="17.15" data-duration="4.05" data-track-index="7">
+  <div id="s05-title" class="title t-l" style="top:322px;background:var(--board)">Kucing pun… <span class="coral">alarm!</span></div>
+  <img id="s05-doc" class="char" src="assets/char/bust_surprised.png" style="left:800px;top:960px;width:260px;opacity:0" />
+</div>
+
+<!-- ===================== S06 brain fight-or-flight (21.2–24.75) ===================== -->
+<div id="s06" class="clip scene" data-start="21.2" data-duration="3.55" data-track-index="2">
+  <div id="s06-title" class="title t-l" style="top:322px;opacity:0">Lawan <span class="lav">atau</span> lari</div>
+  <svg id="s06-art" width="680" height="574" viewBox="-450 -380 900 760" style="position:absolute;left:200px;top:500px">
+    <path d="M-330 40 C-380 -60 -320 -200 -200 -230 C-150 -320 0 -330 60 -280 C160 -320 300 -250 310 -150 C380 -110 380 20 320 60 C330 150 230 200 160 170 C120 230 20 230 -20 190 C-80 230 -200 210 -220 140 C-300 140 -340 100 -330 40 Z" fill="var(--lavender)"/>
+    <path d="M-330 40 C-380 -60 -320 -200 -200 -230 C-150 -320 0 -330 60 -280 C160 -320 300 -250 310 -150 C380 -110 380 20 320 60 C330 150 230 200 160 170 C120 230 20 230 -20 190 C-80 230 -200 210 -220 140 C-300 140 -340 100 -330 40 Z" fill="url(#hatch)"/>
+    <path id="s06-brain" class="ink draw" pathLength="1" d="M-330 40 C-380 -60 -320 -200 -200 -230 C-150 -320 0 -330 60 -280 C160 -320 300 -250 310 -150 C380 -110 380 20 320 60 C330 150 230 200 160 170 C120 230 20 230 -20 190 C-80 230 -200 210 -220 140 C-300 140 -340 100 -330 40 Z"/>
+    <path class="ink5" d="M-220 -120 C-180 -160 -120 -150 -100 -110 M60 -200 C40 -150 90 -120 130 -140 M180 -60 C220 -40 230 10 200 40 M-260 40 C-220 20 -180 40 -170 80 M120 140 C100 110 60 110 40 140" opacity=".8"/>
+    <path class="ink" d="M40 190 C40 260 70 300 110 340" />
+    <g id="s06-btn">
+      <ellipse cx="0" cy="40" rx="150" ry="52" fill="#B23A3A" class="ink5"/>
+      <rect x="-150" y="-30" width="300" height="70" fill="#B23A3A"/>
+      <ellipse id="s06-cap" cx="0" cy="-30" rx="150" ry="52" fill="var(--coral)" class="ink5"/>
+      <path class="ink5" d="M-150 -30 L-150 40 M150 -30 L150 40"/>
+    </g>
+    <g id="s06-finger" transform="translate(0 -330)">
+      <path d="M-40 0 L-40 160 C-40 190 40 190 40 160 L40 0 Z" fill="#fff" class="ink"/>
+      <path d="M-24 128 C-24 112 24 112 24 128 L24 150 C24 162 -24 162 -24 150 Z" fill="#F3E3D6" class="ink5"/>
+    </g>
+  </svg>
+  <div class="label" style="left:120px;width:768px;top:452px;text-align:center;font-size:38px;color:var(--lavender-text)">sistem amaran otak</div>
+</div>
+
+<!-- ===================== S07 body map (24.75–27.6) ===================== -->
+<div id="s07" class="clip scene" data-start="24.75" data-duration="2.85" data-track-index="2">
+  <svg width="1080" height="900" viewBox="0 0 1080 900" style="position:absolute;left:0;top:290px">
+    <g transform="translate(700 20) scale(0.82)">
+      <circle cx="0" cy="90" r="78" fill="#fff" class="ink"/>
+      <path class="ink" fill="#fff" d="M-60 180 C-150 190 -190 240 -200 330 L-230 600 M60 180 C150 190 190 240 200 330 L230 600 M-60 180 L60 180 M-160 360 L-150 640 L-110 880 M160 360 L150 640 L110 880 M-150 640 L150 640"/>
+      <g id="s07-lungs" opacity=".25"><path d="M-20 250 C-90 240 -130 300 -130 380 C-130 430 -80 440 -30 420 Z" fill="var(--sky)" class="ink5"/><path d="M20 250 C90 240 130 300 130 380 C130 430 80 440 30 420 Z" fill="var(--sky)" class="ink5"/></g>
+      <g id="s07-heart" opacity=".25" transform="translate(-20 360)"><path d="M0 40 C-60 0 -70 -40 -40 -60 C-20 -72 0 -60 0 -40 C0 -60 20 -72 40 -60 C70 -40 60 0 0 40 Z" fill="var(--coral)" class="ink5"/></g>
+      <g id="s07-adr" opacity=".25"><path d="M-80 520 C-104 520 -110 560 -84 580 C-60 596 -46 560 -60 530 Z M80 520 C104 520 110 560 84 580 C60 596 46 560 60 530 Z" fill="#E8B8A0" class="ink5"/><path d="M-90 506 L-70 486 L-56 512 Z M90 506 L70 486 L56 512 Z" fill="var(--yellow)" class="ink5"/></g>
+    </g>
+  </svg>
+  <div id="s07-l1" class="label" style="left:120px;top:800px;opacity:0">ADRENALIN ↑</div>
+  <div id="s07-l2" class="label coral" style="left:120px;top:640px;opacity:0">JANTUNG <span id="bpm">72</span> bpm</div>
+  <div id="s07-l3" class="label skyt" style="left:120px;top:480px;opacity:0">NAFAS CEPAT</div>
+</div>
+
+<!-- ===================== S08 freeze: no danger (27.6–30.15) ===================== -->
+<div id="s08" class="clip scene" data-start="27.6" data-duration="2.55" data-track-index="2">
+  <div id="s08-title" class="title t-xl" style="top:322px;opacity:0">Tak ada <span class="teal">bahaya</span></div>
+  <svg width="700" height="560" viewBox="-350 -280 700 560" style="position:absolute;left:190px;top:520px">
+    <g transform="translate(0 120) scale(0.78)"><use href="#car-side"/></g>
+    <g transform="translate(-40 -36) scale(0.8)"><use href="#cat-sit"/></g>
+    <g id="s08-warn" transform="translate(230 -190)">
+      <path d="M0 -80 L80 60 L-80 60 Z" fill="var(--coral)" class="ink5"/><path d="M0 -30 L0 14 M0 36 L0 38" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+      <path id="s08-x" class="draw" pathLength="1" d="M-80 -80 L80 80 M80 -80 L-80 80" stroke="var(--teal)" stroke-width="16" stroke-linecap="round" fill="none"/>
+    </g>
+  </svg>
+</div>
+
+<!-- ===================== S09 timeline curve (30.15–34.35) ===================== -->
+<div id="s09" class="clip scene" data-start="30.15" data-duration="4.2" data-track-index="2">
+  <svg width="860" height="632" viewBox="0 0 980 720" style="position:absolute;left:100px;top:400px">
+    <path class="ink5" d="M80 40 L80 600 L940 600"/>
+    <path id="s09-curve" class="draw" pathLength="1" d="M80 590 C150 590 170 560 200 380 C220 230 240 120 270 110 C300 100 320 180 380 300 C460 450 600 560 920 588" fill="none" stroke="var(--coral)" stroke-width="12" stroke-linecap="round"/>
+    <circle id="s09-dot" cx="270" cy="110" r="18" fill="var(--coral)" class="ink5" opacity="0"/>
+    <path class="ink5" d="M270 130 L270 600" stroke-dasharray="8 14"/>
+    <path class="ink5" d="M880 560 L880 600" />
+  </svg>
+  <div id="s09-l1" class="label coral" style="left:300px;top:420px;opacity:0;font-size:40px">PUNCAK: beberapa minit</div>
+  <div id="s09-l2" class="label teal" style="left:420px;top:880px;opacity:0;font-size:40px">REDA: ~20 minit</div>
+  <div class="label" style="left:130px;top:370px;font-size:32px;color:rgba(20,43,73,.7)">intensiti</div>
+  <div class="label" style="left:620px;top:1000px;font-size:32px;color:rgba(20,43,73,.7)">masa →</div>
+  <div class="foot" style="top:300px;left:120px;width:768px">Ilustrasi. Kebanyakan serangan reda dalam 5–20 minit (NHS).</div>
+</div>
+
+<!-- ===================== S10 recurrence → panic disorder (34.35–41.8) ===================== -->
+<div id="s10" class="clip scene" data-start="34.35" data-duration="7.45" data-track-index="2">
+  <!-- a: calendar -->
+  <svg id="s10-cal" width="760" height="680" viewBox="0 0 760 680" style="position:absolute;left:160px;top:380px">
+    <rect x="10" y="10" width="740" height="660" rx="30" fill="#fff" class="ink"/>
+    <path d="M10 40 C10 24 24 10 40 10 L720 10 C736 10 750 24 750 40 L750 130 L10 130 Z" fill="var(--coral)" class="ink"/>
+    <g class="ink5" opacity=".9"><path d="M10 260 L750 260 M10 390 L750 390 M10 520 L750 520 M158 130 L158 670 M306 130 L306 670 M454 130 L454 670 M602 130 L602 670"/></g>
+    <g id="s10-b1" opacity="0"><path transform="translate(230 190)" d="M10 -50 L-26 8 L0 8 L-12 52 L28 -10 L2 -10 Z" fill="var(--yellow)" class="ink5"/></g>
+    <g id="s10-b2" opacity="0"><path transform="translate(530 320)" d="M10 -50 L-26 8 L0 8 L-12 52 L28 -10 L2 -10 Z" fill="var(--yellow)" class="ink5"/></g>
+    <g id="s10-b3" opacity="0"><path transform="translate(84 455)" d="M10 -50 L-26 8 L0 8 L-12 52 L28 -10 L2 -10 Z" fill="var(--yellow)" class="ink5"/></g>
+    <g id="s10-b4" opacity="0"><path transform="translate(676 590)" d="M10 -50 L-26 8 L0 8 L-12 52 L28 -10 L2 -10 Z" fill="var(--yellow)" class="ink5"/></g>
+  </svg>
+  <!-- b: Kawan worried with thought bubble -->
+  <svg id="s10-kw" width="1080" height="880" viewBox="0 0 1080 880" style="position:absolute;left:0;top:330px;opacity:0">
+    <g transform="translate(400 470) scale(1.05)">
+      <use href="#kawan-body"/><use href="#kawan-head"/>
+      <ellipse cx="-42" cy="4" rx="9" ry="11" fill="var(--ink)"/><ellipse cx="42" cy="4" rx="9" ry="11" fill="var(--ink)"/>
+      <path class="ink5" d="M-66 -28 C-54 -40 -36 -46 -22 -48 M22 -48 C36 -46 54 -40 66 -28"/>
+      <path class="ink5" d="M-24 88 C-12 80 -4 92 6 84 C14 78 20 86 26 84"/>
+    </g>
+    <g transform="translate(790 170)">
+      <circle cx="-170" cy="250" r="16" fill="#fff" class="ink5"/><circle cx="-130" cy="200" r="24" fill="#fff" class="ink5"/>
+      <path d="M-160 60 C-200 -40 -80 -110 0 -70 C80 -120 210 -40 160 60 C200 140 80 190 0 150 C-80 200 -220 140 -160 60 Z" fill="#fff" class="ink"/>
+      <g transform="translate(0 30) scale(0.42)"><use href="#car-side"/></g>
+      <path d="M-120 -10 C-140 20 -140 60 -120 90 M120 -10 C140 20 140 60 120 90" stroke="var(--coral)" stroke-width="8" fill="none" stroke-linecap="round"/>
+    </g>
+  </svg>
+  <!-- c: avoided places -->
+  <div id="s10-places" style="position:absolute;left:0;top:420px;width:1080px;height:700px;opacity:0">
+    <svg width="1080" height="700" viewBox="0 0 1080 700">
+      <g transform="translate(250 230)"><circle r="120" fill="#fff" class="ink"/>
+        <rect x="-70" y="-90" width="140" height="160" rx="28" fill="var(--sky)" class="ink5"/><rect x="-46" y="-62" width="92" height="56" rx="10" fill="#fff" class="ink5"/><circle cx="-36" cy="34" r="10" fill="var(--ink)"/><circle cx="36" cy="34" r="10" fill="var(--ink)"/><path class="ink5" d="M-50 70 L-80 110 M50 70 L80 110"/>
+        <path id="s10-x1" class="draw" pathLength="1" d="M-85 -85 L85 85 M85 -85 L-85 85" stroke="var(--coral)" stroke-width="16" stroke-linecap="round" fill="none"/></g>
+      <g transform="translate(510 300)"><circle r="120" fill="#fff" class="ink"/>
+        <path d="M-70 -40 L70 -40 L80 90 L-80 90 Z" fill="var(--lavender)" class="ink5"/><path class="ink5" d="M-36 -40 C-36 -100 36 -100 36 -40"/>
+        <path id="s10-x2" class="draw" pathLength="1" d="M-85 -85 L85 85 M85 -85 L-85 85" stroke="var(--coral)" stroke-width="16" stroke-linecap="round" fill="none"/></g>
+      <g transform="translate(770 230)"><circle r="120" fill="#fff" class="ink"/>
+        <path d="M-40 110 L-12 -110 L12 -110 L40 110 Z" fill="#9AA3B2" class="ink5"/><path d="M0 -80 L0 -50 M0 -10 L0 20 M0 60 L0 90" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+        <path id="s10-x3" class="draw" pathLength="1" d="M-85 -85 L85 85 M85 -85 L-85 85" stroke="var(--coral)" stroke-width="16" stroke-linecap="round" fill="none"/></g>
+    </svg>
+    <div class="label" style="left:212px;top:370px">LRT</div><div class="label" style="left:420px;top:440px">pasar raya</div><div class="label" style="left:640px;top:370px;font-size:36px">lebuh raya</div>
+  </div>
+  <div id="s10-title" class="title t-m" style="top:322px;opacity:0;background:var(--board)">Gangguan <span class="lav">panik?</span></div>
+</div>
+
+<!-- ===================== S11 doctor confirms (41.8–43.4) ===================== -->
+<div id="s11" class="clip scene" data-start="41.8" data-duration="1.6" data-track-index="2">
+  <img id="s11-doc" class="char" src="assets/char/bust_calm.png" style="left:240px;top:470px;width:600px" />
+  <div id="s11-title" class="title t-l" style="top:322px">Diagnosis: <span class="teal">doktor</span></div>
+</div>
+
+<!-- ===================== S12 red flag (43.4–46.75) ===================== -->
+<div id="s12" class="clip scene" data-start="43.4" data-duration="3.35" data-track-index="2">
+  <div id="s12-border" class="full" style="border:22px solid var(--coral);opacity:0"></div>
+  <svg width="180" height="164" viewBox="-110 -100 220 200" style="position:absolute;left:414px;top:296px">
+    <path id="s12-tri" class="draw" pathLength="1" d="M0 -84 L96 80 L-96 80 Z" fill="none" stroke="var(--coral)" stroke-width="14" stroke-linejoin="round"/>
+    <path d="M0 -26 L0 22 M0 50 L0 52" stroke="var(--coral-text)" stroke-width="14" stroke-linecap="round"/>
+  </svg>
+  <div id="s12-title" class="title t-m" style="top:470px;opacity:0">Sakit dada <span class="coral">jangan terus</span> anggap panik</div>
+  <img id="s12-doc" class="char" src="assets/char/bust_serious.png" style="left:300px;top:730px;width:480px" />
+</div>
+
+<!-- ===================== S13 red-flag checklist (46.75–51.1) ===================== -->
+<div id="s13" class="clip scene" data-start="46.75" data-duration="4.35" data-track-index="2">
+  <div id="s13-i1" class="label" style="left:120px;top:330px;font-size:58px;opacity:0"><span class="coral">✔</span> Kali pertama</div>
+  <div id="s13-i2" class="label" style="left:120px;top:450px;font-size:58px;opacity:0"><span class="coral">✔</span> Sakit teruk</div>
+  <div id="s13-i3" class="label" style="left:120px;top:570px;font-size:58px;opacity:0"><span class="coral">✔</span> Menjalar ke…</div>
+  <svg width="560" height="560" viewBox="-280 -200 560 560" style="position:absolute;left:470px;top:560px">
+    <circle cx="0" cy="-80" r="70" fill="#fff" class="ink"/>
+    <path class="ink" fill="#fff" d="M-40 0 C-140 10 -170 60 -180 150 L-200 340 M40 0 C140 10 170 60 180 150 L200 340 M-40 0 L40 0 M-140 160 L-130 340 M140 160 L130 340"/>
+    <path d="M-20 80 C-60 50 -64 20 -40 8 C-24 0 -10 10 -10 22 C-10 10 6 0 22 8 C46 20 40 50 -20 80 Z" fill="var(--coral)" class="ink5"/>
+    <path id="s13-r1" class="draw" pathLength="1" d="M-40 60 C-110 100 -160 160 -190 300" stroke="var(--coral)" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="1"/>
+    <path id="s13-r2" class="draw" pathLength="1" d="M-20 40 C-10 10 0 -10 0 -12" stroke="var(--coral)" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <path id="s13-r3" class="draw" pathLength="1" d="M-10 30 C10 -10 30 -30 40 -40" stroke="var(--coral)" stroke-width="12" fill="none" stroke-linecap="round"/>
+  </svg>
+  <div id="s13-l1" class="label coral" style="left:420px;top:960px;opacity:0">lengan</div>
+  <div id="s13-l2" class="label coral" style="left:600px;top:640px;opacity:0">leher</div>
+  <div id="s13-l3" class="label coral" style="left:700px;top:470px;opacity:0;font-size:40px">rahang</div>
+</div>
+
+<!-- ===================== S14 999 (51.1–53.35) ===================== -->
+<div id="s14" class="clip scene" data-start="51.1" data-duration="2.55" data-track-index="2">
+  <div id="s14-card" style="position:absolute;left:120px;top:300px;width:768px;height:740px;background:var(--navy);border-radius:44px;border:7px solid var(--ink)">
+    <div style="position:absolute;left:0;top:200px;width:756px;text-align:center;font-weight:900;font-size:280px;line-height:1;color:var(--yellow)">999</div>
+    <svg width="300" height="150" viewBox="0 0 300 150" style="position:absolute;left:228px;top:520px">
+      <path d="M20 110 L20 40 L170 40 L170 60 L230 60 L280 95 L280 110 Z" fill="#fff" class="ink5"/><rect x="70" y="58" width="44" height="14" fill="var(--coral)"/><rect x="85" y="43" width="14" height="44" fill="var(--coral)"/>
+      <circle cx="80" cy="115" r="20" fill="var(--ink)"/><circle cx="230" cy="115" r="20" fill="var(--ink)"/>
+    </svg>
+    <div style="position:absolute;left:24px;top:40px;width:708px;text-align:center;font-family:Nunito,sans-serif;font-weight:800;font-size:42px;color:#fff;line-height:1.25">Berhenti di tempat selamat.<br/>Jangan pandu sendiri ke hospital.</div>
+  </div>
+</div>
+
+<!-- ===================== S15 calm breathing (53.35–60.25) ===================== -->
+<div id="s15" class="clip scene" data-start="53.65" data-duration="6.6" data-track-index="2">
+  <svg width="1080" height="980" viewBox="0 0 1080 980" style="position:absolute;left:0;top:300px">
+    <circle id="s15-breath" cx="540" cy="450" r="400" fill="var(--sky)" opacity=".16"/>
+    <circle id="s15-breath2" cx="540" cy="450" r="300" fill="none" stroke="var(--sky)" stroke-width="6" stroke-dasharray="4 18" opacity=".7"/>
+    <path d="M190 520 C190 420 260 380 340 380 L740 380 C820 380 890 420 890 520 L890 900 L190 900 Z" fill="var(--teal)" opacity=".85"/>
+    <path d="M190 520 C190 420 260 380 340 380 L740 380 C820 380 890 420 890 520 L890 900 L190 900 Z" fill="url(#hatch)"/>
+    <path class="ink" d="M190 520 C190 420 260 380 340 380 L740 380 C820 380 890 420 890 520 L890 900"/>
+    <g transform="translate(540 600)"><g id="s15-kw">
+      <use href="#kawan-body"/><use href="#kawan-head"/>
+      <path class="ink5" d="M-56 4 q14 10 28 0 M28 4 q14 10 28 0"/>
+      <path class="ink5" d="M-60 -34 C-50 -40 -36 -40 -24 -36 M24 -36 C36 -40 50 -40 60 -34"/>
+      <path class="ink5" d="M-20 84 C-6 92 6 92 20 84"/>
+    </g></g>
+  </svg>
+  <div id="s15-t1" class="title t-s skyt" style="top:322px;opacity:0;text-transform:none;font-weight:800">Tarik nafas… perlahan</div>
+  <div id="s15-t2" class="title t-l teal" style="top:322px;opacity:0">Ini akan berlalu.</div>
+</div>
+
+<!-- ===================== S16 treatable (60.25–65.7) ===================== -->
+<div id="s16" class="clip scene" data-start="60.25" data-duration="5.45" data-track-index="2">
+  <div id="s16-title" class="title t-m" style="top:330px;opacity:0">Boleh <span class="swipe">dirawat</span> ✓</div>
+  <div id="s16-c1" style="position:absolute;left:120px;top:470px;width:640px;height:240px;background:#fff;border:6px solid var(--ink);border-radius:30px;opacity:0">
+    <svg width="170" height="170" viewBox="-85 -85 170 170" style="position:absolute;left:24px;top:30px">
+      <circle cx="0" cy="-48" r="26" fill="var(--lavender)" class="ink5"/><circle cx="-46" cy="32" r="26" fill="var(--coral)" class="ink5"/><circle cx="46" cy="32" r="26" fill="var(--sky)" class="ink5"/>
+      <path class="ink5" d="M-20 -36 L-36 6 M-16 40 L16 40 M36 6 L20 -36"/>
+    </svg>
+    <div style="position:absolute;left:210px;top:46px;font-weight:900;font-size:62px;color:var(--navy)">Terapi CBT</div>
+    <div style="position:absolute;left:210px;top:132px;font-family:Nunito,sans-serif;font-weight:700;font-size:27px;color:rgba(20,43,73,.8)">fikiran · perasaan · tindakan</div>
+  </div>
+  <div id="s16-c2" style="position:absolute;left:120px;top:750px;width:640px;height:240px;background:#fff;border:6px solid var(--ink);border-radius:30px;opacity:0">
+    <svg width="170" height="170" viewBox="-85 -85 170 170" style="position:absolute;left:24px;top:30px">
+      <g transform="rotate(-35)"><path d="M-70 -28 L0 -28 L0 28 L-70 28 C-86 28 -96 14 -96 0 C-96 -14 -86 -28 -70 -28 Z" fill="var(--teal)" class="ink5"/><path d="M0 -28 L70 -28 C86 -28 96 -14 96 0 C96 14 86 28 70 28 L0 28 Z" fill="#fff" class="ink5"/></g>
+    </svg>
+    <div style="position:absolute;left:210px;top:46px;font-weight:900;font-size:62px;color:var(--navy)">Ubat sesuai</div>
+    <div style="position:absolute;left:210px;top:132px;font-family:Nunito,sans-serif;font-weight:700;font-size:34px;color:rgba(20,43,73,.8)">ikut nasihat doktor</div>
+  </div>
+  <img id="s16-doc" class="char" src="assets/char/bust_thumbsup.png" style="left:775px;top:640px;width:290px;opacity:0" />
+</div>
+
+<!-- ===================== S17 myth vs fact (65.7–68.6) ===================== -->
+<div id="s17" class="clip scene" data-start="65.7" data-duration="3.5" data-track-index="2">
+  <div class="title t-m coral" style="top:322px">Mengada-ada</div>
+  <svg width="768" height="60" style="position:absolute;left:120px;top:332px"><path id="s17-s1" class="draw" pathLength="1" d="M90 30 L678 30" stroke="var(--teal)" stroke-width="18" stroke-linecap="round"/></svg>
+  <div class="title t-m coral" style="top:470px">Lemah</div>
+  <svg width="768" height="60" style="position:absolute;left:120px;top:480px"><path id="s17-s2" class="draw" pathLength="1" d="M244 30 L524 30" stroke="var(--teal)" stroke-width="18" stroke-linecap="round"/></svg>
+  <div id="s17-fact" class="title t-m navy" style="top:660px;opacity:0">Respons badan yang <span class="swipe">sebenar</span></div>
+</div>
+
+<!-- ===================== S18 sensitivity dial + happy ending (68.6–73.6) ===================== -->
+<div id="s18" class="clip scene" data-start="69.2" data-duration="4.4" data-track-index="2">
+  <svg width="820" height="759" viewBox="0 0 1080 1000" style="position:absolute;left:130px;top:520px">
+    <g transform="translate(540 330)">
+      <path d="M-300 0 A300 300 0 0 1 -150 -260" fill="none" stroke="var(--teal)" stroke-width="56"/>
+      <path d="M-150 -260 A300 300 0 0 1 150 -260" fill="none" stroke="var(--yellow)" stroke-width="56"/>
+      <path d="M150 -260 A300 300 0 0 1 300 0" fill="none" stroke="var(--coral)" stroke-width="56"/>
+      <path class="ink" d="M-328 0 A328 328 0 0 1 328 0 M-272 0 A272 272 0 0 1 272 0"/>
+      <g id="s18-needle"><path d="M-14 0 L0 -250 L14 0 Z" fill="#16181D"/></g>
+      <circle r="30" fill="var(--navy)" class="ink5"/>
+    </g>
+    <g transform="translate(560 780) scale(0.62)"><use href="#car-side"/></g>
+    <g id="s18-cat" transform="translate(600 650) scale(0.6)"><use href="#cat-sleep"/></g>
+  </svg>
+  <div class="label" style="left:440px;top:800px;font-size:34px">SENSITIVITI</div>
+  <div id="s18-title" class="title t-m teal" style="top:322px;opacity:0">Ramai yang bertambah baik</div>
+</div>
+
+<!-- ===================== S19 outro (73.6–80.5) ===================== -->
+<div id="frame2" class="clip full" data-start="73.6" data-duration="6.9" data-track-index="1">
+  <div class="full" style="border:14px solid var(--navy);border-radius:38px;left:22px;top:22px;width:1036px;height:1876px;opacity:.9"></div>
+</div>
+<div id="s19" class="clip scene" data-start="73.6" data-duration="6.9" data-track-index="2">
+  <img id="s19-doc" class="char" src="assets/char/body_front.png" style="left:410px;top:540px;width:260px" />
+  <div id="s19-save" style="position:absolute;left:170px;top:620px;opacity:0">
+    <svg width="160" height="200" viewBox="0 0 160 200"><path d="M20 10 L140 10 L140 190 L80 140 L20 190 Z" fill="var(--yellow)" class="ink"/></svg>
+    <div class="label" style="left:10px;top:210px">Save</div>
+  </div>
+  <div id="s19-share" style="position:absolute;left:705px;top:620px;opacity:0">
+    <svg width="170" height="200" viewBox="0 0 170 200"><path d="M20 180 C20 90 70 60 120 60 L120 20 L160 90 L120 160 L120 120 C80 120 50 140 20 180 Z" fill="var(--teal)" class="ink"/></svg>
+    <div class="label" style="left:6px;top:210px">Share</div>
+  </div>
+  <div id="s19-lock" style="position:absolute;left:120px;top:322px;width:768px;text-align:center;opacity:0;line-height:1.05">
+    <div style="font-weight:900;font-size:84px;color:var(--navy)">Dr. Azren</div><div style="font-weight:700;font-size:54px;color:var(--teal-text)">Spread Positivity</div>
+  </div>
+  <div id="s19-disc" class="foot" style="top:478px;left:120px;width:768px;opacity:0">Untuk pendidikan sahaja, bukan pengganti nasihat doktor.</div>
+</div>
+
+<!-- ===================== brand bug ===================== -->
+<div id="bugclip" class="clip" data-start="5.9" data-duration="67.7" data-track-index="8">
+  <div id="bug">
+    <svg width="40" height="40" viewBox="0 0 40 40"><path d="M8 4 L8 16 C8 24 22 24 22 16 L22 4 M15 23 L15 30 C15 36 30 36 30 28 L30 24" fill="none" stroke="var(--teal)" stroke-width="4" stroke-linecap="round"/><circle cx="30" cy="20" r="5" fill="none" stroke="var(--teal)" stroke-width="4"/></svg>
+    <span>Dr. Azren</span>
+  </div>
+</div>
+
+<!-- ===================== CAPTIONS (generated) ===================== -->
+<!--@CAPTIONS-->
+
+<!-- ===================== AUDIO ===================== -->
+<audio id="vo" class="clip" data-start="0.3" data-track-index="20" data-volume="1" src="assets/audio/vo.mp3"></audio>
+<audio id="bgm" class="clip" data-start="0" data-duration="80.5" data-track-index="21" data-volume="1" src="assets/audio/bed.mp3"
+  data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0.62},{"t":0.25,"v":0.62},{"t":0.9,"v":0.16},{"t":27.3,"v":0.16},{"t":27.5,"v":0.05},{"t":28.1,"v":0.16},{"t":77.2,"v":0.16},{"t":77.9,"v":0.42},{"t":79.2,"v":0.42},{"t":80.45,"v":0}]}]}'></audio>
+<audio id="sx-w1" class="clip" data-start="5.82" data-duration="0.57" data-track-index="31" data-volume="0.45" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sx-p1" class="clip" data-start="9.22" data-duration="0.72" data-track-index="32" data-volume="0.5" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-w2" class="clip" data-start="13.12" data-duration="0.57" data-track-index="33" data-volume="0.4" src="assets/sfx/whoosh.mp3"></audio>
+<audio id="sx-c1" class="clip" data-start="14.8" data-duration="0.37" data-track-index="34" data-volume="0.5" src="assets/sfx/click-soft.mp3"></audio>
+<audio id="sx-al" class="clip" data-start="19.62" data-duration="1.62" data-track-index="35" data-volume="0.28" src="assets/sfx/error.mp3"></audio>
+<audio id="sx-w3" class="clip" data-start="21.12" data-duration="0.57" data-track-index="36" data-volume="0.45" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sx-c2" class="clip" data-start="22.9" data-duration="0.37" data-track-index="37" data-volume="0.55" src="assets/sfx/click.mp3"></audio>
+<audio id="sx-p2" class="clip" data-start="25.0" data-duration="0.72" data-track-index="38" data-volume="0.4" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-w4" class="clip" data-start="30.08" data-duration="0.57" data-track-index="39" data-volume="0.35" src="assets/sfx/whoosh.mp3"></audio>
+<audio id="sx-p3" class="clip" data-start="38.6" data-duration="0.72" data-track-index="40" data-volume="0.45" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-c3" class="clip" data-start="39.05" data-duration="0.37" data-track-index="41" data-volume="0.5" src="assets/sfx/click-soft.mp3"></audio>
+<audio id="sx-p4" class="clip" data-start="39.5" data-duration="0.72" data-track-index="42" data-volume="0.45" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-imp" class="clip" data-start="44.97" data-duration="2.12" data-track-index="43" data-volume="0.55" src="assets/sfx/impact-bass-1.mp3"></audio>
+<audio id="sx-p5" class="clip" data-start="46.76" data-duration="0.72" data-track-index="44" data-volume="0.4" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-c4" class="clip" data-start="47.53" data-duration="0.37" data-track-index="45" data-volume="0.45" src="assets/sfx/click-soft.mp3"></audio>
+<audio id="sx-p6" class="clip" data-start="48.69" data-duration="0.72" data-track-index="46" data-volume="0.4" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-n1" class="clip" data-start="51.12" data-duration="2.46" data-track-index="47" data-volume="0.35" src="assets/sfx/notification.mp3"></audio>
+<audio id="sx-w5" class="clip" data-start="53.6" data-duration="0.57" data-track-index="48" data-volume="0.3" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sx-sp" class="clip" data-start="64.16" data-duration="1.8" data-track-index="49" data-volume="0.4" src="assets/sfx/sparkle.mp3"></audio>
+<audio id="sx-w6" class="clip" data-start="73.55" data-duration="0.57" data-track-index="50" data-volume="0.45" src="assets/sfx/whoosh.mp3"></audio>
+<audio id="sx-p7" class="clip" data-start="73.72" data-duration="0.72" data-track-index="51" data-volume="0.45" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-p8" class="clip" data-start="74.12" data-duration="0.72" data-track-index="52" data-volume="0.45" src="assets/sfx/pop.mp3"></audio>
+
+</div>
+
+<script>
+const tl = gsap.timeline({ paused: true });
+const V = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
+const E3 = "power3.out", BK = "back.out(1.7)";
+const pop = (sel, t, from = 0.6) => tl.fromTo(sel, { opacity: 0, scale: from }, { opacity: 1, scale: 1, duration: 0.3, ease: BK, transformOrigin: "50% 50%" }, t);
+const rise = (sel, t, d = 0.4) => tl.fromTo(sel, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: d, ease: E3 }, t);
+const draw = (sel, t, d = 0.6, ease = "power1.inOut") => tl.fromTo(sel, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: d, ease }, t);
+const slam = (sel, t) => { tl.fromTo(sel, { opacity: 0, scale: 1.35 }, { opacity: 1, scale: 1, duration: 0.2, ease: "power4.out", transformOrigin: "50% 50%" }, t); };
+const push = (sel, t, d) => tl.fromTo(sel, { scale: 1 }, { scale: 1.06, duration: d, ease: "sine.inOut", transformOrigin: "50% 45%" }, t);
+
+/* ---- S01 hook (frame 0 already complete) ---- */
+tl.fromTo("#frame-in", { opacity: 0.9 }, { opacity: 0.9, duration: 0.01 }, 0);
+push("#s01-card", 0, 5.9);
+tl.fromTo("#s01-bokeh", { opacity: 0.55 }, { opacity: 0.95, duration: 0.45, repeat: 5, yoyo: true, ease: "sine.inOut" }, 0);
+// fallback acting (hidden under H1 when the clip exists)
+tl.fromTo("#kw1-eyes-n", { opacity: 1 }, { opacity: 0, duration: 0.08 }, 2.55);
+tl.fromTo("#kw1-eyes-w", { opacity: 0 }, { opacity: 1, duration: 0.08 }, 2.55);
+tl.fromTo("#kw1-brow-n", { opacity: 1 }, { opacity: 0, duration: 0.08 }, 2.55);
+tl.fromTo("#kw1-brow-w", { opacity: 0 }, { opacity: 1, duration: 0.08 }, 2.55);
+tl.fromTo("#kw1-hand", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: E3 }, 2.6);
+tl.fromTo("#kw1-mouth-n", { opacity: 1 }, { opacity: 0, duration: 0.08 }, 4.4);
+tl.fromTo("#kw1-mouth-o", { opacity: 0 }, { opacity: 1, duration: 0.08 }, 4.4);
+tl.fromTo("#kw1-sweat", { opacity: 0, y: -10 }, { opacity: 1, y: 6, duration: 0.6, ease: "sine.in" }, 3.4);
+draw("#s01-ecg-p", 3.3, 0.7, "none");
+draw("#s01-ecg2", 3.3, 0.7, "none");
+tl.to("#s01-title", { opacity: 0, duration: 0.1 }, 3.3);
+slam("#s01-k1", 3.4);
+tl.to("#s01-k1", { opacity: 0, duration: 0.1 }, 4.35);
+slam("#s01-k2", 4.45);
+tl.fromTo("#s01-k2", { x: 0 }, { x: 4, duration: 0.05, repeat: 9, yoyo: true, ease: "none" }, 4.7);
+
+/* ---- S02 ---- */
+tl.fromTo("#s02-doc", { opacity: 0, x: 260 }, { opacity: 1, x: 0, duration: 0.42, ease: "back.out(1.3)" }, 5.9);
+slam("#s02-title", 5.95);
+
+/* ---- S03 stat ---- */
+slam("#s03-title", 7.25);
+["#s03-p1","#s03-p2","#s03-p3","#s03-p4","#s03-p5","#s03-p6","#s03-p7","#s03-p8"].forEach((s, i) => pop(s, 7.35 + i * 0.09, 0.3));
+tl.fromTo("#s03-hit", { opacity: 0 }, { opacity: 1, duration: 0.12 }, 9.2);
+tl.fromTo("#s03-base", { opacity: 1 }, { opacity: 0, duration: 0.12 }, 9.2);
+tl.fromTo("#s03-p8", { scale: 1 }, { scale: 1.15, duration: 0.15, yoyo: true, repeat: 1, ease: "sine.inOut", transformOrigin: "50% 50%" }, 9.2);
+rise("#s03-sub", 10.1);
+tl.fromTo("#s03-foot", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 8.3);
+
+/* ---- S04 car + shield ---- */
+slam("#s04-title", 13.25);
+draw(".car-line", 13.2, 0.9);
+tl.fromTo("#car1", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 13.25);
+pop("#car1-shield", 14.78);
+tl.to("#car1-shield", { opacity: 0, duration: 0.25 }, 16.6);
+tl.fromTo("#cat1", { opacity: 0, x: -140 }, { opacity: 1, x: 0, duration: 0.6, ease: E3 }, 15.9);
+
+/* ---- S05 cat jumps (fallback under H2) ---- */
+tl.fromTo("#carcard-frame", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 17.0);
+tl.fromTo("#carcard-bg", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 17.0);
+tl.to("#cat1", { x: 650, y: -260, duration: 0.45, ease: "power2.out" }, 18.3);
+tl.to("#cat1", { y: -206, duration: 0.22, ease: "power2.in" }, 18.75);
+tl.fromTo("#car1-lights", { opacity: 0 }, { opacity: 1, duration: 0.12, repeat: 7, yoyo: true, ease: "none" }, 19.6);
+tl.fromTo("#car1-waves", { opacity: 0 }, { opacity: 1, duration: 0.15, repeat: 5, yoyo: true, ease: "none" }, 19.7);
+slam("#s05-title", 17.2);
+pop("#s05-doc", 20.15, 0.5);
+
+/* ---- S06 brain ---- */
+tl.fromTo("#s06-art", { scale: 0.2, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "power3.out", transformOrigin: "50% 50%" }, 21.2);
+draw("#s06-brain", 21.3, 0.8);
+tl.fromTo("#s06-finger", { y: -330 }, { y: -200, duration: 0.25, ease: "power2.in" }, 22.7);
+tl.fromTo("#s06-cap", { y: 0 }, { y: 26, duration: 0.08, ease: "none" }, 22.95);
+tl.to("#s06-finger", { y: -330, duration: 0.3, ease: "power2.out" }, 23.2);
+tl.to("#s06-cap", { y: 0, duration: 0.2 }, 23.25);
+slam("#s06-title", 23.5);
+
+/* ---- S07 body map: one organ per word ---- */
+tl.fromTo("#s07-adr", { opacity: 0.25 }, { opacity: 1, duration: 0.2 }, 24.74);
+rise("#s07-l1", 24.8);
+tl.fromTo("#s07-heart", { opacity: 0.25, scale: 1 }, { opacity: 1, scale: 1.18, duration: 0.18, repeat: 5, yoyo: true, ease: "sine.inOut", transformOrigin: "50% 50%" }, 25.74);
+rise("#s07-l2", 25.76);
+tl.fromTo("#bpm", { innerText: 72 }, { innerText: 130, duration: 1.2, snap: { innerText: 1 }, ease: "power2.out" }, 25.8);
+tl.fromTo("#s07-lungs", { opacity: 0.25, scale: 1 }, { opacity: 1, scale: 1.07, duration: 0.22, repeat: 3, yoyo: true, ease: "sine.inOut", transformOrigin: "50% 50%" }, 26.56);
+rise("#s07-l3", 26.58);
+
+/* ---- S08 freeze ---- */
+slam("#s08-title", 28.15);
+draw("#s08-x", 28.6, 0.4);
+
+/* ---- S09 curve ---- */
+draw("#s09-curve", 30.25, 3.4, "sine.inOut");
+pop("#s09-dot", 30.75);
+rise("#s09-l1", 30.95);
+rise("#s09-l2", 32.75);
+
+/* ---- S10 ---- */
+["#s10-b1","#s10-b2","#s10-b3","#s10-b4"].forEach((s, i) => pop(s, 34.9 + i * 0.35, 0.3));
+tl.to("#s10-cal", { opacity: 0, duration: 0.25 }, 36.45);
+tl.fromTo("#s10-kw", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 36.5);
+tl.to("#s10-kw", { opacity: 0, duration: 0.25 }, 38.25);
+tl.fromTo("#s10-places", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 38.3);
+draw("#s10-x1", 38.55, 0.3); draw("#s10-x2", 39.0, 0.3); draw("#s10-x3", 39.45, 0.3);
+slam("#s10-title", 40.75);
+
+/* ---- S11 ---- */
+tl.fromTo("#s11-doc", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.35, ease: E3 }, 41.8);
+slam("#s11-title", 42.1);
+
+/* ---- S12 red flag ---- */
+draw("#s12-tri", 43.45, 0.5);
+tl.fromTo("#s12-doc", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.35, ease: E3 }, 43.5);
+tl.fromTo("#s12-border", { opacity: 0 }, { opacity: 0.85, duration: 0.18, yoyo: true, repeat: 1, ease: "sine.inOut" }, 44.98);
+tl.set("#s12-border", { opacity: 0.35 }, 45.4);
+slam("#s12-title", 44.99);
+
+/* ---- S13 checklist ---- */
+rise("#s13-i1", 46.75); rise("#s13-i2", 47.52); rise("#s13-i3", 48.68);
+draw("#s13-r1", 49.3, 0.35); rise("#s13-l1", 49.32);
+draw("#s13-r2", 49.63, 0.3); rise("#s13-l2", 49.65);
+draw("#s13-r3", 50.25, 0.3); rise("#s13-l3", 50.3);
+
+/* ---- S14 999 ---- */
+tl.fromTo("#s14-card", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.35, ease: BK, transformOrigin: "50% 50%" }, 51.1);
+
+/* ---- S15 calm ---- */
+tl.fromTo("#s15-breath", { scale: 0.75 }, { scale: 1.05, duration: 2.6, ease: "sine.inOut", transformOrigin: "50% 50%", yoyo: true, repeat: 1 }, 54.0);
+tl.fromTo("#s15-breath2", { rotation: 0 }, { rotation: 40, duration: 6.6, ease: "none", transformOrigin: "50% 50%" }, 53.65);
+tl.fromTo("#s15-kw", { y: 0 }, { y: -6, duration: 2.6, yoyo: true, repeat: 1, ease: "sine.inOut" }, 54.0);
+rise("#s15-t1", 55.95, 0.6);
+tl.to("#s15-t1", { opacity: 0, duration: 0.3 }, 58.2);
+rise("#s15-t2", 58.45, 0.5);
+
+/* ---- S16 treatment ---- */
+slam("#s16-title", 61.37);
+tl.fromTo("#s16-c1", { opacity: 0, x: -120 }, { opacity: 1, x: 0, duration: 0.4, ease: E3 }, 62.05);
+tl.fromTo("#s16-c2", { opacity: 0, x: -120 }, { opacity: 1, x: 0, duration: 0.4, ease: E3 }, 63.25);
+tl.fromTo("#s16-doc", { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(1.4)" }, 60.4);
+
+/* ---- S17 myth/fact ---- */
+draw("#s17-s1", 66.0, 0.35); draw("#s17-s2", 67.78, 0.3);
+rise("#s17-fact", 67.6, 0.4);
+
+/* ---- S18 dial ---- */
+tl.fromTo("#s18-needle", { rotation: 62 }, { rotation: -60, duration: 1.1, ease: "back.out(1.2)", transformOrigin: "50% 100%" }, 70.92);
+tl.fromTo("#s18-cat", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 71.4);
+slam("#s18-title", 71.85);
+
+/* ---- S19 outro ---- */
+tl.fromTo("#s19-doc", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.4)" }, 73.6);
+tl.fromTo("#s19-doc", { rotation: 0 }, { rotation: 2.5, duration: 0.5, yoyo: true, repeat: 7, ease: "sine.inOut", transformOrigin: "50% 100%" }, 74.2);
+pop("#s19-save", 73.72); pop("#s19-share", 74.12);
+rise("#s19-lock", 75.05, 0.5);
+tl.fromTo("#s19-disc", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 75.6);
+
+/* ---- brand bug ---- */
+tl.fromTo("#bug", { opacity: 0 }, { opacity: 0.82, duration: 0.4 }, 6.2);
+
+/* ---- AI clips switch ---- */
+if (V.useAiClips === false) { tl.set(["#h1", "#h2"], { opacity: 0 }, 0); }
+
+/* ---- captions ---- */
+/*@CAPTION_TWEENS*/
+
+window.__timelines["main"] = tl;
+</script>
+</body>
+</html>
