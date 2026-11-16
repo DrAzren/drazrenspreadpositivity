@@ -57,12 +57,25 @@ Large binaries (WAV/MP4/PNG renders) are kept on Google Drive and listed in each
 
 | Step | Status |
 |---|---|
-| 1. Reference creative audit | ✅ Done (`00_system/02_reference_creative_audit.md`) |
-| 2. Whiteboard 2.0 design system | ✅ v1.0 drafted (`00_system/03_…`) |
-| 3. HyperFrames master template | ⏳ Next, after the mascot decision (character sheet vs. build the rig from reference stills) |
-| 4. Episode 1 concept | ✅ "Alarm Kereta" (`Episode_001_Serangan_Panik/04_storyboard.md`) |
-| 5. Three hooks | ✅ (`03a_hooks.md`), B selected |
-| 6. Narration script + storyboard | ✅ DRAFT v1, **awaiting medical approval** |
-| 7. Credit estimate | ✅ (`16_credit_estimate_PRE_GENERATION.md`) |
-| 8–13 | ⏸ Blocked on approvals 1–5 in the credit estimate |
-| 14. 30-day calendar | ⏳ After Episode 1 is approved, so the system is proven first |
+| 1. Reference creative audit | ✅ `00_system/02_reference_creative_audit.md` |
+| 2. Whiteboard 2.0 design system | ✅ `00_system/03_WHITEBOARD_2.0_design_system.md` |
+| 3. HyperFrames master template | ✅ `Episode_001_Serangan_Panik/06_hyperframes_source/src/index.src.html` + `tools/build_episode.py` (copy the folder for each new episode) |
+| 4–6. Concept, hooks, script, storyboard | ✅ Episode 001 |
+| 7. Credit estimate | ✅ `16_credit_estimate_PRE_GENERATION.md` |
+| 8. ElevenLabs v4 narration | ✅ 1 take, 77.1 s, 1,308.87 credits |
+| 9. Visuals (HyperFrames + 2 Higgsfield clips) | ✅ 25 credits + 2.75 for the character sheet |
+| 10. Final assembly | ✅ `09_final_video_1080x1920.mp4`, 80.5 s, −14 LUFS (MP4 kept out of git) |
+| 11. Thumbnail + platform copy | ✅ `11_…png`, `12/14/15_…txt` (Instagram skipped, per your instruction) |
+| 12. Metricool | ⏸ Proposal ready (`17_metricool_schedule.md`); **needs your publishing approval** |
+| 13. Credit report + reusable template | ✅ `16_credit_usage_report.md`; this runbook |
+| 14. 30-day calendar | ⏳ Next |
+
+## Tools
+
+| Script | Does |
+|---|---|
+| `tools/align_script.py <tts.txt> <vo.mp3> <words.json>` | Free local word timing for a known script (pause-based DP alignment) |
+| `tools/build_episode.py <episode_dir> [--no-captions]` | Template → `index.html` + caption track + `10_subtitles.srt`; drops AI clips that don't exist yet |
+| `tools/qa_video.py <mp4> --max 90` | Technical QA (specs, duration, LUFS/peak, black/frozen frames) |
+
+Render: `cd <episode>/06_hyperframes_source && npx -y hyperframes@0.9.55 render -o renders/out.mp4 --fps 30 --quality delivery`, then loudness-normalise to −14 LUFS (see the QA report).
