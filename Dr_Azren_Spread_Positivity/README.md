@@ -1,0 +1,68 @@
+# Dr. Azren | Spread Positivity — Daily Health Explainer Production System
+
+One medically responsible, scroll-stopping 60–90 s vertical explainer per day, in Bahasa Melayu Malaysia.
+
+## Pipeline
+
+```
+Topic → Research + fact-check → Hooks (3) → Script BM → ★ Dr. Azren medical approval
+      → Preflight costs → ★ Budget approval → ElevenLabs v4 narration (1 take)
+      → Word timings → HyperFrames build (SVG rigs, diagrams, captions, music mix)
+      → [≤ 2 Higgsfield inset clips, start frame = our own render] → QA → Render (local)
+      → Thumbnail + captions per platform → ★ Publishing approval → Metricool schedule
+      → Cost reconciliation → Analytics feed the next week's plan
+```
+★ = human approval gate. Nothing is published or scheduled without it.
+
+## Folder layout
+
+```
+Dr_Azren_Spread_Positivity/
+  00_system/                         ← shared across all episodes
+    01_integration_audit.md          what is connected (verified)
+    02_reference_creative_audit.md   analysis of the reference episode
+    03_WHITEBOARD_2.0_design_system.md
+    04_cost_model.md                 verified prices, caps, rules
+    mascot_reference/                stills of the existing mascot (approval input)
+    reference_audit/                 1 fps contact sheets of the reference
+  Episode_NNN_Topic/
+    01_research_notes.md  02_sources.md  03_script_BM_*.txt  03a_hooks.md
+    04_storyboard.md  05_voiceover.wav  06_hyperframes_source/
+    07_higgsfield_assets/  08_background_music/  09_final_video_1080x1920.mp4
+    10_subtitles.srt  11_thumbnail_1080x1920.png  12–15 platform captions
+    16_credit_usage_report.md  17_metricool_schedule.md  18_quality_assurance_report.md
+```
+Large binaries (WAV/MP4/PNG renders) are kept on Google Drive and listed in each episode's manifest. They are not committed to git.
+
+## Daily runbook (reusable template)
+
+1. **Pick the topic** from the 30-day calendar. Check it isn't close to the last 3 episodes.
+2. **Research**: guideline or systematic review first, Malaysian sources where they exist. Write `01`/`02`, with each source's "read" status stated honestly.
+3. **Fact-check table** (claim → verdict → source) and safety checklist (red flags, no diagnosis implied, medication wording).
+4. **3 hooks** (curiosity / relatable / fact), scored; pick one and say why.
+5. **Script**: 160–190 words, ≤ 1,480 billable characters (v4 tags count), narration starts on the hook (never "Assalamualaikum, saya…"), and red flags are never cut.
+6. ★ **Dr. Azren approves** the script and the fact-check.
+7. **Preflight** ElevenLabs (`estimate_only`, `generations_count=1`) and Higgsfield (`get_cost`), then fill `16_credit_estimate`. ★ **Budget approval.**
+8. **Narration**: `eleven_v4`, voice `lN6exnzhuXDOyNQfsVSR`, 1 take. Download to `05_voiceover.wav`.
+9. **Word timings** from the narration (local transcription, corrected against the script), then build the caption JSON and SRT.
+10. **Build in HyperFrames** from the master template: set variables and beats, snap beats to anchor words.
+11. **AI inset clips** (if approved): render our start frame → Higgsfield → QA → keep or use the SVG fallback.
+12. **Mix**: brand bed, ducking, SFX on visible actions, −14 LUFS / ≤ −1 dBTP.
+13. `npx hyperframes check` → snapshot review → **render locally** → technical QA (`ffprobe`, loudness, frame check).
+14. **Thumbnail** (HyperFrames still) and **platform captions** (TikTok / IG / FB / YT, each written separately).
+15. ★ **Publishing approval** → Metricool `brandId 7812551` → verify the scheduled post → log it in `17`.
+16. **Reconcile** estimated vs actual credits in `16_credit_usage_report.md`.
+
+## Status — first production task (Part S)
+
+| Step | Status |
+|---|---|
+| 1. Reference creative audit | ✅ Done (`00_system/02_reference_creative_audit.md`) |
+| 2. Whiteboard 2.0 design system | ✅ v1.0 drafted (`00_system/03_…`) |
+| 3. HyperFrames master template | ⏳ Next, after the mascot decision (character sheet vs. build the rig from reference stills) |
+| 4. Episode 1 concept | ✅ "Alarm Kereta" (`Episode_001_Serangan_Panik/04_storyboard.md`) |
+| 5. Three hooks | ✅ (`03a_hooks.md`), B selected |
+| 6. Narration script + storyboard | ✅ DRAFT v1, **awaiting medical approval** |
+| 7. Credit estimate | ✅ (`16_credit_estimate_PRE_GENERATION.md`) |
+| 8–13 | ⏸ Blocked on approvals 1–5 in the credit estimate |
+| 14. 30-day calendar | ⏳ After Episode 1 is approved, so the system is proven first |
