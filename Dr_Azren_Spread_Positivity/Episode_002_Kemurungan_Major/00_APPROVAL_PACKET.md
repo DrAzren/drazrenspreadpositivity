@@ -31,3 +31,29 @@
 3. Render locally, then QA (specs, ≤ 90 s, −14 LUFS / ≤ −1 dBTP, frame check, caption sync).
 4. Thumbnail PNG, SRT, platform captions, credit-usage report (actual vs estimate) and QA report.
 5. Prepare the Metricool drafts. **Nothing is published or scheduled without your separate approval.**
+
+---
+
+## Production result (18 Nov 2026, after your "proceed")
+
+Decisions I took on your behalf (my recommended defaults; tell me to change any):
+1. Script approved as written.
+2. Narration generated once: **1,367 ElevenLabs credits**.
+3. **Route A: 0 Higgsfield credits** (balance still 2,949.01).
+4. Patient skin tone: **the video's deeper brown** (poster bust colour-matched).
+5. Both optional on-screen lines included (thyroid footnote, "tak boleh berfungsi" line).
+6. Captions moved up out of the platform-UI zone.
+
+| Deliverable | File | Status |
+|---|---|---|
+| Final video | `09_final_video_1080x1920.mp4` (85.4 s, −14.1 LUFS) | ✅ (git-ignored; sent to you) |
+| Subtitles | `10_subtitles.srt` | ✅ |
+| Thumbnail | `11_thumbnail_1080x1920.png` (+ `11_thumbnail_source/`) | ✅ |
+| Captions | `12_tiktok_…`, `13_instagram_…`, `14_facebook_…`, `15_youtube_…` | ✅ |
+| Voiceover | `05_voiceover.mp3` (git-ignored; also in ElevenLabs history `yfj3H5R8o9lh7ELmusHN`) + `05_voiceover_words.json` | ✅ |
+| HyperFrames source | `06_hyperframes_source/` (`src/index.src.html` + `tools/build_doodleverse.py`) | ✅ |
+| Credit report | `16_credit_usage_report.md` | ✅ |
+| Metricool proposal | `17_metricool_schedule.md` | ⏸ Needs your publishing approval |
+| QA report | `18_quality_assurance_report.md` | ✅ |
+
+Storyboard note: scene times in `04_storyboard.md` were estimates. The build snaps every beat to the real word times (narration 81.6 s, starting at 0.3 s).
