@@ -1,0 +1,60 @@
+/* Dr. Azren DoodleVerse — shared look (board, headline, caption bar, doodle helpers).
+   Reused by every episode and the thumbnail. Fonts are local (OFL / Apache 2.0). */
+@font-face { font-family: "DV Marker"; src: url("../fonts/PermanentMarker-400.woff2") format("woff2"); }
+@font-face { font-family: "DV Sans"; font-weight: 800; src: url("../fonts/Poppins-800.woff2") format("woff2"); }
+@font-face { font-family: "DV Sans"; font-weight: 900; src: url("../fonts/Poppins-900.woff2") format("woff2"); }
+@font-face { font-family: "DV Hand"; src: url("../fonts/PatrickHand-400.woff2") format("woff2"); }
+
+:root {
+  /* marker palette sampled from the reference poster + video */
+  --ink: #17161a;
+  --board: #f7f6f2;
+  --teal: #2fae9e;      /* scrubs, calm, help */
+  --cyan: #3cc4e6;      /* offset outline, breath, water */
+  --yellow: #ffd43b;    /* offset outline, highlight, sparkle */
+  --pink: #f08cb4;      /* brain, hijab family */
+  --coral: #ff6b5e;     /* heart, warning */
+  --orange: #ff9f2e;
+  --purple: #8f6cf0;    /* mind, thoughts */
+  --red: #e2382f;       /* alarm only */
+  --grey: #8d9096;      /* depression "colour drain" */
+  /* caption bars rotate through these (as in the reference) */
+  --bar-1: #18a999; --bar-2: #f25f5c; --bar-3: #7b61ff; --bar-4: #2d9cdb;
+}
+
+html, body { margin: 0; padding: 0; background: var(--board); }
+.stage {
+  position: relative; width: 1080px; height: 1920px; overflow: hidden;
+  background:
+    radial-gradient(ellipse 420px 120px at 22% 7%, rgba(255,255,255,.95), rgba(255,255,255,0) 70%),
+    radial-gradient(ellipse 380px 110px at 78% 9%, rgba(255,255,255,.9), rgba(255,255,255,0) 70%),
+    radial-gradient(ellipse 900px 1200px at 50% 45%, #fbfaf7 0%, #f1f0ec 70%, #e7e6e2 100%);
+}
+/* thin aluminium board frame */
+.stage::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  border: 14px solid transparent; border-image: linear-gradient(135deg,#d9dce0,#b7bcc2 40%,#eef0f2 60%,#aeb3ba) 1;
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,.08), inset 0 6px 18px rgba(0,0,0,.06);
+}
+/* ghosted marker residue */
+.residue { position: absolute; inset: 0; opacity: .06; pointer-events: none; }
+
+.headline {
+  position: absolute; left: 0; right: 0; text-align: center;
+  font-family: "DV Marker", sans-serif; color: var(--ink); line-height: .95; letter-spacing: 2px;
+  text-shadow: -7px 6px 0 var(--cyan), 7px 9px 0 var(--yellow);
+  transform: rotate(-2deg);
+}
+
+/* caption: one coloured bar per line, white bold text, yellow keyword */
+.cap { position: absolute; left: 50%; transform: translateX(-50%) rotate(-1.2deg); text-align: center; width: 940px; }
+.cap .line {
+  display: inline-block; margin: 6px 0; padding: 10px 26px 14px;
+  font-family: "DV Sans", sans-serif; font-weight: 800; font-size: 58px; line-height: 1.05; color: #fff;
+  background: var(--bar-1); border: 4px solid var(--ink); border-radius: 6px;
+  box-shadow: 6px 7px 0 var(--ink); -webkit-text-stroke: 2px var(--ink); paint-order: stroke fill;
+}
+.cap .k { color: var(--yellow); }
+
+.sprite { position: absolute; display: block; }
+.grey { filter: grayscale(1) contrast(.9) brightness(1.05); }

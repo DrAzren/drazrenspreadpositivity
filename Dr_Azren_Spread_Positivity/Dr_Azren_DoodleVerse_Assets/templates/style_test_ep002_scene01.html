@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<title>DoodleVerse style test — Ep002 Scene 1</title>
+<link rel="stylesheet" href="doodleverse.css">
+<style>
+  .lbl { position:absolute; font-family:"DV Marker"; font-size:46px; color:var(--ink); }
+  .lbl u { text-decoration:none; background:linear-gradient(transparent 62%, var(--yellow) 62%, var(--yellow) 88%, transparent 88%); }
+  .lbl.kini u { background:linear-gradient(transparent 62%, #c9ccd1 62%, #c9ccd1 88%, transparent 88%); }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+  <!-- headline -->
+  <div class="headline" style="top:150px;font-size:124px;white-space:nowrap">DULU SUKA,</div>
+  <div class="headline" style="top:282px;font-size:124px;white-space:nowrap">KINI <span style="color:#6d7076;text-shadow:-7px 6px 0 #c3c6cb, 7px 9px 0 #dfe1e4;">KOSONG?</span></div>
+
+  <!-- patient: cut-out of the approved reference art -->
+  <img class="sprite" src="../characters/patient_hijab/patient_bust_worried.png" style="left:170px;top:800px;width:750px;">
+
+  <!-- marker-drawn doodle layer (SVG, local, re-colourable) -->
+  <svg width="1080" height="1920" viewBox="0 0 1080 1920" style="position:absolute;inset:0" id="doodles">
+    <defs>
+      <filter id="wob" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="7"/>
+        <feDisplacementMap in="SourceGraphic" scale="6"/>
+      </filter>
+      <pattern id="hatch" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
+        <line x1="0" y1="0" x2="0" y2="16" stroke="rgba(0,0,0,.20)" stroke-width="5"/>
+      </pattern>
+      <pattern id="hatchW" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)">
+        <line x1="0" y1="0" x2="0" y2="22" stroke="rgba(255,255,255,.35)" stroke-width="4"/>
+      </pattern>
+      <marker id="ah" viewBox="0 0 20 20" refX="10" refY="10" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+        <path d="M2,3 L17,10 L2,17" fill="none" stroke="#2d9cdb" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+
+      <!-- music notes -->
+      <symbol id="music" viewBox="0 0 200 200">
+        <g stroke="#17161a" stroke-width="8" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M84,150 L84,44 L174,24 L174,128" fill="none"/>
+          <path d="M84,44 L174,24 L174,52 L84,72 Z" fill="#8f6cf0"/>
+          <ellipse cx="56" cy="152" rx="32" ry="23" transform="rotate(-22 56 152)" fill="#8f6cf0"/>
+          <ellipse cx="146" cy="132" rx="32" ry="23" transform="rotate(-22 146 132)" fill="#8f6cf0"/>
+        </g>
+        <ellipse cx="56" cy="152" rx="32" ry="23" transform="rotate(-22 56 152)" fill="url(#hatch)"/>
+        <ellipse cx="146" cy="132" rx="32" ry="23" transform="rotate(-22 146 132)" fill="url(#hatch)"/>
+        <path d="M40,140 q8,-8 18,-9 M130,120 q8,-8 18,-9" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none"/>
+      </symbol>
+
+      <!-- teh tarik glass -->
+      <symbol id="teh" viewBox="0 0 220 230">
+        <path d="M60,40 q10,-22 0,-34 M100,40 q12,-22 0,-36 M140,40 q10,-22 0,-34" stroke="#3cc4e6" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M152,95 q48,0 44,38 q-4,36 -50,34" fill="none" stroke="#17161a" stroke-width="9" stroke-linecap="round"/>
+        <path d="M30,52 L170,52 L156,205 q-2,14 -16,14 L60,219 q-14,0 -16,-14 Z" fill="#d98a3a" stroke="#17161a" stroke-width="8" stroke-linejoin="round"/>
+        <path d="M30,52 L170,52 L166,92 L34,92 Z" fill="#f7e9cc" stroke="#17161a" stroke-width="6" stroke-linejoin="round"/>
+        <path d="M34,92 L166,92 L156,205 q-2,14 -16,14 L60,219 q-14,0 -16,-14 Z" fill="url(#hatch)"/>
+        <path d="M52,110 L60,196" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".7"/>
+        <circle cx="70" cy="72" r="6" fill="#fff" stroke="#17161a" stroke-width="3"/><circle cx="120" cy="66" r="8" fill="#fff" stroke="#17161a" stroke-width="3"/><circle cx="148" cy="76" r="5" fill="#fff" stroke="#17161a" stroke-width="3"/>
+      </symbol>
+
+      <symbol id="sparkle" viewBox="-50 -50 100 100">
+        <path d="M0,-44 Q7,-7 44,0 Q7,7 0,44 Q-7,7 -44,0 Q-7,-7 0,-44Z" fill="#ffd43b" stroke="#17161a" stroke-width="5" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="drop" viewBox="-30 -50 60 90">
+        <path d="M0,-44 C10,-20 26,0 22,16 C18,34 -18,34 -22,16 C-26,0 -10,-20 0,-44Z" fill="#8fb3cf" stroke="#17161a" stroke-width="5"/>
+        <path d="M-9,8 q0,10 8,14" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>
+      </symbol>
+    </defs>
+
+    <g filter="url(#wob)">
+      <!-- labels' underline arcs & dashed arrow from DULU to KINI, over the cloud -->
+      <path d="M215,600 C330,470 750,470 860,600" fill="none" stroke="#2d9cdb" stroke-width="7" stroke-dasharray="20 16" stroke-linecap="round" marker-end="url(#ah)"/>
+
+      <!-- grey rain cloud over her head -->
+      <g transform="translate(330,560)">
+        <path d="M70,170 C10,170 0,96 62,86 C66,30 150,10 182,62 C214,18 300,28 304,92 C362,90 378,170 318,172 Z" fill="#9aa0a8" stroke="#17161a" stroke-width="9" stroke-linejoin="round"/>
+        <path d="M70,170 C10,170 0,96 62,86 C66,30 150,10 182,62 C214,18 300,28 304,92 C362,90 378,170 318,172 Z" fill="url(#hatch)"/>
+        <path d="M60,110 q30,-30 70,-10 M190,80 q40,-22 80,6" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" opacity=".6"/>
+      </g>
+      <use href="#drop" x="390" y="745" width="40" height="60"/>
+      <use href="#drop" x="480" y="765" width="40" height="60"/>
+      <use href="#drop" x="590" y="748" width="40" height="60"/>
+      <use href="#drop" x="680" y="768" width="40" height="60"/>
+
+      <!-- DULU (colour) -->
+      <use href="#music" x="40" y="640" width="180" height="180"/>
+      <use href="#teh" x="40" y="880" width="180" height="190"/>
+      <use href="#sparkle" x="200" y="610" width="60" height="60"/>
+      <use href="#sparkle" x="15" y="830" width="42" height="42"/>
+      <use href="#sparkle" x="205" y="1010" width="48" height="48"/>
+      <path d="M232,700 q14,-14 30,-12 M236,736 q18,-6 32,2" stroke="#ff9f2e" stroke-width="7" stroke-linecap="round" fill="none"/>
+
+      <!-- KINI (drained to grey) -->
+      <g class="grey" opacity=".85">
+        <use href="#music" x="860" y="640" width="180" height="180"/>
+        <use href="#teh" x="860" y="880" width="180" height="190"/>
+      </g>
+      <path d="M880,1180 q16,6 30,0 q16,-6 30,0 q16,6 30,0 q16,-6 30,0" stroke="#8d9096" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <text x="990" y="860" font-family="DV Marker" font-size="64" fill="#8f6cf0" stroke="#17161a" stroke-width="2.5" transform="rotate(12 990 860)">?</text>
+
+      <!-- side accents -->
+      <path d="M70,1260 l26,-38 l8,30 l30,-40" stroke="#3cc4e6" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M960,1240 q20,-30 50,-30 M972,1290 q24,-20 54,-14" stroke="#c3c6cb" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <circle cx="120" cy="560" r="9" fill="#f08cb4"/><circle cx="975" cy="560" r="8" fill="#3cc4e6"/><circle cx="85" cy="1360" r="7" fill="#ffd43b"/>
+    </g>
+  </svg>
+
+  <div class="lbl" style="left:70px;top:1090px;transform:rotate(-6deg)"><u>DULU</u></div>
+  <div class="lbl kini" style="left:912px;top:1105px;transform:rotate(5deg);color:#6d7076"><u>KINI</u></div>
+
+  <!-- caption (burned-in style; final timing from the narration) -->
+  <div class="cap" style="top:1440px;"><span class="line">dulu buat anda <span class="k">gembira</span>...</span></div>
+</div>
+</body>
+</html>

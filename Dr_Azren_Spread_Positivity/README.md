@@ -70,6 +70,23 @@ Large binaries (WAV/MP4/PNG renders) are kept on Google Drive and listed in each
 | 13. Credit report + reusable template | ✅ `16_credit_usage_report.md`; this runbook |
 | 14. 30-day calendar | ⏳ Next |
 
+## V2: DoodleVerse (from Episode 002)
+
+The master brief V2 replaces "Whiteboard 2.0" with **DoodleVerse**, the rich hatched-marker look of the lipsync reference, built almost entirely locally.
+
+| Change | V1 (Ep001) | V2 (Ep002 →) |
+|---|---|---|
+| Look | Clean vector whiteboard, semantic colours | Hatched alcohol-marker illustration, multi-colour doodle confetti, coloured caption bars |
+| Characters | SVG rig + AI sprites | **Sprites cut from your own approved art** (`tools/cutout.py`) + SVG doodles |
+| Higgsfield | ≤ 25/episode (2 video clips) | **0 by default; ≤ 10 per generation and ≤ 10 per episode** |
+| Frame rate | 30 fps | 24 fps |
+| Lip-sync | — | Mouth atlas harvested from the lipsync reference |
+
+Docs: `00_system/05_DOODLEVERSE_reference_analysis.md`, `00_system/06_DOODLEVERSE_asset_and_animation_strategy.md`. Library: `Dr_Azren_DoodleVerse_Assets/`.
+
+### Episode 002: Kemurungan Major (Major Depressive Disorder)
+⏸ **Awaiting approval**: see `Episode_002_Kemurungan_Major/00_APPROVAL_PACKET.md`. Spent so far: 0 credits.
+
 ## Tools
 
 | Script | Does |
@@ -77,5 +94,6 @@ Large binaries (WAV/MP4/PNG renders) are kept on Google Drive and listed in each
 | `tools/align_script.py <tts.txt> <vo.mp3> <words.json>` | Free local word timing for a known script (pause-based DP alignment) |
 | `tools/build_episode.py <episode_dir> [--no-captions]` | Template → `index.html` + caption track + `10_subtitles.srt`; drops AI clips that don't exist yet |
 | `tools/qa_video.py <mp4> --max 90` | Technical QA (specs, duration, LUFS/peak, black/frozen frames) |
+| `tools/cutout.py IN OUT --box x0 y0 x1 y1 [--erase …] [--keep all]` | Transparent sprite from whiteboard art (border flood-fill), 0 credits |
 
 Render: `cd <episode>/06_hyperframes_source && npx -y hyperframes@0.9.55 render -o renders/out.mp4 --fps 30 --quality delivery`, then loudness-normalise to −14 LUFS (see the QA report).
