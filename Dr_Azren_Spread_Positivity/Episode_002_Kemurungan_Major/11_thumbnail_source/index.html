@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<title>Ep002 thumbnail</title>
+<link rel="stylesheet" href="../../Dr_Azren_DoodleVerse_Assets/templates/doodleverse.css">
+<style>
+  .sub{position:absolute;left:50%;transform:translateX(-50%) rotate(-2deg);top:640px;white-space:nowrap;
+    font-family:"DV Sans";font-weight:900;font-size:58px;color:#fff;background:#f25f5c;border:6px solid var(--ink);border-radius:12px;
+    box-shadow:8px 9px 0 var(--ink);padding:8px 34px 12px;-webkit-text-stroke:2.5px var(--ink);paint-order:stroke fill}
+  .brand{position:absolute;left:0;width:1080px;top:1740px;height:180px;padding-top:44px;text-align:center;font-family:"DV Sans";font-weight:900;font-size:50px;color:#fff;background:#18a999;border-top:7px solid var(--ink);-webkit-text-stroke:2px var(--ink);paint-order:stroke fill}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="headline" style="top:310px;font-size:126px;white-space:nowrap">KEMURUNGAN</div>
+  <div class="headline" style="top:448px;font-size:150px;white-space:nowrap;color:#11897b">MAJOR</div>
+  <div class="sub">Bukan sekadar sedih</div>
+
+  <svg width="1080" height="1920" viewBox="0 0 1080 1920" style="position:absolute;inset:0">
+   <defs>
+    <filter id="wob" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="6"/></filter>
+    <pattern id="hatch" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(38)"><line x1="0" y1="0" x2="0" y2="16" stroke="rgba(0,0,0,.2)" stroke-width="5"/></pattern>
+    <symbol id="sparkle" viewBox="-50 -50 100 100"><path d="M0,-44 Q7,-7 44,0 Q7,7 0,44 Q-7,7 -44,0 Q-7,-7 0,-44Z" fill="#ffd43b" stroke="#17161a" stroke-width="5" stroke-linejoin="round"/></symbol>
+    <symbol id="star" viewBox="-50 -50 100 100"><path d="M0,-44 L12,-14 L43,-13 L19,7 L27,38 L0,20 L-27,38 L-19,7 L-43,-13 L-12,-14 Z" fill="#ff6b5e" stroke="#17161a" stroke-width="5" stroke-linejoin="round"/></symbol>
+    <symbol id="drop" viewBox="-30 -50 60 90"><path d="M0,-44 C10,-20 26,0 22,16 C18,34 -18,34 -22,16 C-26,0 -10,-20 0,-44Z" fill="#8fb3cf" stroke="#17161a" stroke-width="5"/></symbol>
+   </defs>
+   <g filter="url(#wob)">
+    <use href="#sparkle" x="40" y="250" width="70" height="70"/><use href="#sparkle" x="960" y="270" width="80" height="80"/>
+    <use href="#star" x="40" y="560" width="60" height="60"/><use href="#star" x="980" y="560" width="56" height="56"/>
+    <path d="M60,780 l26,-38 l8,30 l30,-40" stroke="#3cc4e6" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M90,860 q20,-24 46,-22 M84,900 q26,-12 50,-4" stroke="#ff9f2e" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <!-- grey rain cloud over the patient -->
+    <g transform="translate(600,760) scale(1.0)">
+     <path d="M70,170 C10,170 0,96 62,86 C66,30 150,10 182,62 C214,18 300,28 304,92 C362,90 378,170 318,172 Z" fill="#9aa0a8" stroke="#17161a" stroke-width="9" stroke-linejoin="round"/>
+     <path d="M70,170 C10,170 0,96 62,86 C66,30 150,10 182,62 C214,18 300,28 304,92 C362,90 378,170 318,172 Z" fill="url(#hatch)"/>
+    </g>
+    <use href="#drop" x="680" y="940" width="36" height="54"/><use href="#drop" x="770" y="958" width="36" height="54"/><use href="#drop" x="860" y="942" width="36" height="54"/>
+    
+   </g>
+  </svg>
+
+  <img class="sprite" src="../../Dr_Azren_DoodleVerse_Assets/characters/dr_azren/drazren_bust_pointing.png" style="left:-30px;top:850px;width:640px">
+  <img class="sprite" src="../../Dr_Azren_DoodleVerse_Assets/characters/patient_hijab/patient_bust_worried_deep.png" style="left:470px;top:960px;width:600px">
+  <div class="brand">Dr. Azren | Spread Positivity</div>
+</div>
+</body>
+</html>

@@ -77,10 +77,16 @@ def main():
     rgba = np.dstack([img, (alpha * 255).astype(np.uint8)])
     # trim to content
     ys, xs = np.where(rgba[..., 3] > 8)
+    tx = ty = 0
     if len(xs):
+        tx, ty = int(xs.min()), int(ys.min())
         rgba = rgba[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
     Image.fromarray(rgba).save(a.out, optimize=True)
-    print(f"{a.out}: {rgba.shape[1]}x{rgba.shape[0]}")
+    # sidecar: where the sprite's (0,0) sits in the source image (for mouth/eye patches)
+    import json
+    json.dump({"source": a.inp.split("/")[-1], "box": a.box, "origin": [x0 + tx, y0 + ty],
+               "size": [rgba.shape[1], rgba.shape[0]]}, open(a.out.rsplit(".", 1)[0] + ".json", "w"))
+    print(f"{a.out}: {rgba.shape[1]}x{rgba.shape[0]} origin=({x0 + tx},{y0 + ty})")
 
 
 if __name__ == "__main__":

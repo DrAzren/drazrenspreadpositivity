@@ -3,7 +3,7 @@
 
 Checks: 1080x1920, 30 fps, H.264 + AAC, duration <= max, integrated loudness
 -14 LUFS (+/-1.5), true peak <= -1 dBTP, black frames, frozen spans.
-Usage: qa_video.py <video.mp4> [--max 90] [--sheet out.jpg]
+Usage: qa_video.py <video.mp4> [--max 90] [--fps 30] [--sheet out.jpg]
 """
 import json, re, subprocess, sys
 
@@ -12,7 +12,7 @@ def run(cmd):
     return subprocess.run(cmd, capture_output=True, text=True)
 
 
-def main(path, max_dur=90.0, sheet=None):
+def main(path, max_dur=90.0, sheet=None, fps=30.0):
     pr = json.loads(run(["ffprobe", "-v", "error", "-show_streams", "-show_format", "-of", "json", path]).stdout)
     v = next(s for s in pr["streams"] if s["codec_type"] == "video")
     a = next((s for s in pr["streams"] if s["codec_type"] == "audio"), None)
@@ -24,7 +24,7 @@ def main(path, max_dur=90.0, sheet=None):
     frz = run(["ffmpeg", "-hide_banner", "-i", path, "-vf", "freezedetect=n=0.001:d=4", "-an", "-f", "null", "-"]).stderr
     checks = [
         ("resolution 1080x1920", v["width"] == 1080 and v["height"] == 1920, f'{v["width"]}x{v["height"]}'),
-        ("fps 30", round(num / den, 3) == 30.0, f"{num}/{den}"),
+        (f"fps {fps:g}", round(num / den, 3) == fps, f"{num}/{den}"),
         ("video H.264", v["codec_name"] == "h264", v["codec_name"]),
         ("pixel format yuv420p", v.get("pix_fmt") == "yuv420p", v.get("pix_fmt")),
         ("audio AAC", a is not None and a["codec_name"] == "aac", a and a["codec_name"]),
@@ -47,4 +47,5 @@ if __name__ == "__main__":
     args = sys.argv[1:]
     mx = float(args[args.index("--max") + 1]) if "--max" in args else 90.0
     sh = args[args.index("--sheet") + 1] if "--sheet" in args else None
-    sys.exit(main(args[0], mx, sh))
+    fp = float(args[args.index("--fps") + 1]) if "--fps" in args else 30.0
+    sys.exit(main(args[0], mx, sh, fp))

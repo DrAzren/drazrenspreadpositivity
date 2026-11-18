@@ -1,0 +1,880 @@
+<!doctype html>
+<!--
+  Dr. Azren | Spread Positivity — Episode 002 "Kemurungan Major" (DoodleVerse V2)
+  SOURCE TEMPLATE. Do not edit index.html: run
+     python3 ../../tools/build_doodleverse.py ..      (from 06_hyperframes_source/)
+  which injects captions, the lip-sync track (LS) and the blink track (BL).
+  All times are absolute seconds; narration starts at VO = 0.3 s. 24 fps.
+  Characters are sprites cut from Dr. Azren's own reference art (0 AI credits).
+-->
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<style>
+@font-face{font-family:"DV Marker";src:url("assets/fonts/PermanentMarker-400.woff2") format("woff2")}
+@font-face{font-family:"DV Sans";font-weight:800;src:url("assets/fonts/Poppins-800.woff2") format("woff2")}
+@font-face{font-family:"DV Sans";font-weight:900;src:url("assets/fonts/Poppins-900.woff2") format("woff2")}
+@font-face{font-family:"DV Sans";font-weight:700;src:url("assets/fonts/Poppins-700.woff2") format("woff2")}
+@font-face{font-family:"DV Hand";src:url("assets/fonts/PatrickHand-400.woff2") format("woff2")}
+:root{--ink:#17161a;--board:#f7f6f2;--teal:#2fae9e;--cyan:#3cc4e6;--yellow:#ffd43b;--pink:#f08cb4;--coral:#ff6b5e;
+  --orange:#ff9f2e;--purple:#8f6cf0;--red:#e2382f;--grey:#8d9096;--greyt:#6d7076}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--board)}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:"DV Sans",sans-serif;color:var(--ink)}
+.full,.scene{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.cam{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}
+.abs{position:absolute}
+.svgl{position:absolute;left:0;top:0;overflow:visible}
+.hl{position:absolute;left:0;width:1080px;text-align:center;font-family:"DV Marker";color:var(--ink);line-height:.98;letter-spacing:2px;
+  text-shadow:-7px 6px 0 var(--cyan),7px 9px 0 var(--yellow);white-space:nowrap}
+.hl .g{color:var(--greyt);text-shadow:-7px 6px 0 #c3c6cb,7px 9px 0 #dfe1e4}
+.hl .t{color:#11897b}
+.lbl{position:absolute;font-family:"DV Marker";font-size:46px;color:var(--ink);white-space:nowrap}
+.hand{position:absolute;font-family:"DV Hand";color:var(--ink);white-space:nowrap}
+.u-y{background:linear-gradient(transparent 60%,var(--yellow) 60%,var(--yellow) 90%,transparent 90%)}
+.u-g{background:linear-gradient(transparent 60%,#c9ccd1 60%,#c9ccd1 90%,transparent 90%)}
+.draw{stroke-dasharray:1;stroke-dashoffset:0}
+.ink{stroke:var(--ink);stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
+.ink5{stroke:var(--ink);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.grey{filter:grayscale(1) contrast(.92) brightness(1.06)}
+/* reveal mask (raster or groups): animate --rv 100% -> 0% */
+.rv{-webkit-mask-image:linear-gradient(100deg,#000 0 44%,transparent 56% 100%);mask-image:linear-gradient(100deg,#000 0 44%,transparent 56% 100%);
+  -webkit-mask-size:260% 100%;mask-size:260% 100%;-webkit-mask-position:var(--rv,0%) 0;mask-position:var(--rv,0%) 0;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+.rvr{-webkit-mask-image:linear-gradient(100deg,transparent 0 44%,#000 56% 100%);mask-image:linear-gradient(100deg,transparent 0 44%,#000 56% 100%);
+  -webkit-mask-size:260% 100%;mask-size:260% 100%;-webkit-mask-position:var(--rv,100%) 0;mask-position:var(--rv,100%) 0;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+/* character rigs: sprite + mouth patches + eyelids, driven by LS/BL tracks */
+.rig{position:absolute}
+.rig .rs{position:absolute;left:0;top:0;transform-origin:0 0}
+.rig .rs img{position:absolute;display:block}
+.rig .mo{opacity:0}
+.rig[data-m="0"] .mo0,.rig[data-m="1"] .mo1,.rig[data-m="2"] .mo2,.rig[data-m="3"] .mo3,.rig[data-m="4"] .mo4{opacity:1}
+.rig .lid{opacity:0}
+.rig[data-b="1"] .lid{opacity:1}
+/* cards & stickers */
+.card{position:absolute;background:#fffdf7;border:6px solid var(--ink);border-radius:26px;box-shadow:9px 10px 0 var(--ink)}
+.sticker{position:absolute;font-family:"DV Sans";font-weight:900;color:#fff;-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;
+  border:6px solid var(--ink);border-radius:14px;box-shadow:8px 9px 0 var(--ink);text-align:center;white-space:nowrap}
+/* captions: reference style, one coloured bar per group, yellow keyword */
+.cap{position:absolute;left:70px;top:1238px;width:940px;text-align:center}
+.cap-in{display:inline-block;padding:10px 26px 14px;font-family:"DV Sans";font-weight:800;font-size:50px;line-height:1.05;color:#fff;
+  border:4px solid var(--ink);border-radius:8px;box-shadow:6px 7px 0 var(--ink);-webkit-text-stroke:2px var(--ink);paint-order:stroke fill;white-space:nowrap}
+.cap-in .k{color:var(--yellow)}
+.bar1{background:#18a999}.bar2{background:#f25f5c}.bar3{background:#7b61ff}.bar4{background:#2d9cdb}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="85.3" data-width="1080" data-height="1920">
+
+<!-- ===================== SHARED SVG DEFS ===================== -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="wob" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="7"/>
+      <feDisplacementMap in="SourceGraphic" scale="6"/>
+    </filter>
+    <pattern id="hatch" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
+      <line x1="0" y1="0" x2="0" y2="16" stroke="rgba(0,0,0,.20)" stroke-width="5"/>
+    </pattern>
+    <pattern id="hatchW" width="20" height="20" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)">
+      <line x1="0" y1="0" x2="0" y2="20" stroke="rgba(255,255,255,.4)" stroke-width="4"/>
+    </pattern>
+    <pattern id="scribG" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <rect width="22" height="22" fill="#b9bcc2"/><line x1="0" y1="0" x2="0" y2="22" stroke="#8d9096" stroke-width="7"/>
+    </pattern>
+    <marker id="ah" viewBox="0 0 20 20" refX="10" refY="10" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M2,3 L17,10 L2,17" fill="none" stroke="#2d9cdb" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <symbol id="music" viewBox="0 0 200 200">
+      <g stroke="#17161a" stroke-width="8" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M84,150 L84,44 L174,24 L174,128" fill="none"/>
+        <path d="M84,44 L174,24 L174,52 L84,72 Z" fill="#8f6cf0"/>
+        <ellipse cx="56" cy="152" rx="32" ry="23" transform="rotate(-22 56 152)" fill="#8f6cf0"/>
+        <ellipse cx="146" cy="132" rx="32" ry="23" transform="rotate(-22 146 132)" fill="#8f6cf0"/>
+      </g>
+      <ellipse cx="56" cy="152" rx="32" ry="23" transform="rotate(-22 56 152)" fill="url(#hatch)"/>
+      <ellipse cx="146" cy="132" rx="32" ry="23" transform="rotate(-22 146 132)" fill="url(#hatch)"/>
+      <path d="M40,140 q8,-8 18,-9 M130,120 q8,-8 18,-9" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none"/>
+    </symbol>
+    <symbol id="teh" viewBox="0 0 220 230">
+      <path d="M60,40 q10,-22 0,-34 M100,40 q12,-22 0,-36 M140,40 q10,-22 0,-34" stroke="#3cc4e6" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M152,95 q48,0 44,38 q-4,36 -50,34" fill="none" stroke="#17161a" stroke-width="9" stroke-linecap="round"/>
+      <path d="M30,52 L170,52 L156,205 q-2,14 -16,14 L60,219 q-14,0 -16,-14 Z" fill="#d98a3a" stroke="#17161a" stroke-width="8" stroke-linejoin="round"/>
+      <path d="M30,52 L170,52 L166,92 L34,92 Z" fill="#f7e9cc" stroke="#17161a" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M34,92 L166,92 L156,205 q-2,14 -16,14 L60,219 q-14,0 -16,-14 Z" fill="url(#hatch)"/>
+      <path d="M52,110 L60,196" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".7"/>
+      <circle cx="70" cy="72" r="6" fill="#fff" stroke="#17161a" stroke-width="3"/><circle cx="120" cy="66" r="8" fill="#fff" stroke="#17161a" stroke-width="3"/>
+    </symbol>
+    <symbol id="sparkle" viewBox="-50 -50 100 100">
+      <path d="M0,-44 Q7,-7 44,0 Q7,7 0,44 Q-7,7 -44,0 Q-7,-7 0,-44Z" fill="#ffd43b" stroke="#17161a" stroke-width="5" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="star" viewBox="-50 -50 100 100">
+      <path d="M0,-44 L12,-14 L43,-13 L19,7 L27,38 L0,20 L-27,38 L-19,7 L-43,-13 L-12,-14 Z" fill="#ff6b5e" stroke="#17161a" stroke-width="5" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="starP" viewBox="-50 -50 100 100">
+      <path d="M0,-44 L12,-14 L43,-13 L19,7 L27,38 L0,20 L-27,38 L-19,7 L-43,-13 L-12,-14 Z" fill="#8f6cf0" stroke="#17161a" stroke-width="5" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="drop" viewBox="-30 -50 60 90">
+      <path d="M0,-44 C10,-20 26,0 22,16 C18,34 -18,34 -22,16 C-26,0 -10,-20 0,-44Z" fill="#8fb3cf" stroke="#17161a" stroke-width="5"/>
+      <path d="M-9,8 q0,10 8,14" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="heart" viewBox="-60 -55 120 110">
+      <path d="M0,46 C-30,22 -54,4 -54,-18 C-54,-38 -38,-50 -22,-50 C-10,-50 -3,-44 0,-36 C3,-44 10,-50 22,-50 C38,-50 54,-38 54,-18 C54,4 30,22 0,46Z" fill="#ff6b5e" stroke="#17161a" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M-34,-24 q4,-12 16,-14" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="cloud" viewBox="0 0 380 200">
+      <path d="M70,170 C10,170 0,96 62,86 C66,30 150,10 182,62 C214,18 300,28 304,92 C362,90 378,170 318,172 Z" fill="#9aa0a8" stroke="#17161a" stroke-width="9" stroke-linejoin="round"/>
+      <path d="M70,170 C10,170 0,96 62,86 C66,30 150,10 182,62 C214,18 300,28 304,92 C362,90 378,170 318,172 Z" fill="url(#hatch)"/>
+      <path d="M60,110 q30,-30 70,-10 M190,80 q40,-22 80,6" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" opacity=".6"/>
+    </symbol>
+    <symbol id="phoneI" viewBox="0 0 100 100">
+      <path d="M28,10 l18,4 l4,22 l-12,8 q8,18 26,26 l8,-12 l22,4 l4,18 q-4,12 -18,12 q-40,-4 -62,-46 q-6,-24 10,-36z" fill="#2fae9e" stroke="#17161a" stroke-width="6" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ===================== BOARD (untimed) ===================== -->
+<div id="board" class="full" style="background:
+  radial-gradient(ellipse 420px 120px at 22% 7%,rgba(255,255,255,.95),rgba(255,255,255,0) 70%),
+  radial-gradient(ellipse 380px 110px at 78% 9%,rgba(255,255,255,.9),rgba(255,255,255,0) 70%),
+  radial-gradient(ellipse 900px 1200px at 50% 45%,#fbfaf7 0%,#f1f0ec 70%,#e7e6e2 100%)"></div>
+
+<!-- ===================== S1 HOOK 0–4.2 ===================== -->
+<div id="s1" class="clip scene" data-start="0" data-duration="4.2" data-track-index="1">
+ <div id="s1-cam" class="cam">
+  <div id="s1-h1" class="hl" style="top:190px;font-size:120px">DULU SUKA,</div>
+  <div id="s1-h2" class="hl" style="top:318px;font-size:120px">KINI <span id="s1-kosong">KOSONG?</span></div>
+  <div id="s1-pat" class="rig" data-talk="0" data-m="0" data-b="0" style="left:170px;top:720px;width:750px;height:1113px">
+   <div class="rs" style="transform:scale(1.2235)">
+    <img src="assets/img/patient_bust_worried_deep.png" style="left:0;top:0;width:613px">
+    <svg class="lid" width="613" height="400" style="position:absolute;left:0;top:0;overflow:visible">
+      <ellipse cx="249" cy="214" rx="38" ry="25" fill="#b06f48"/><path d="M212,216 q37,16 74,0" stroke="#17161a" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <ellipse cx="389" cy="230" rx="42" ry="25" fill="#af643d"/><path d="M348,232 q41,16 82,0" stroke="#17161a" stroke-width="6" fill="none" stroke-linecap="round"/>
+    </svg>
+   </div>
+  </div>
+  <svg class="svgl" width="1080" height="1920">
+   <g filter="url(#wob)">
+    <path id="s1-arrow" class="draw" pathLength="1" opacity="0" d="M215,580 C330,455 750,455 860,580" fill="none" stroke="#2d9cdb" stroke-width="7" stroke-linecap="round"/>
+    <path id="s1-ahead" d="M830,548 L862,582 L818,590" fill="none" stroke="#2d9cdb" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>
+    <g id="s1-cloud"><use href="#cloud" x="330" y="510" width="380" height="200"/></g>
+    <g id="s1-drops"><use href="#drop" x="390" y="690" width="40" height="60"/><use href="#drop" x="480" y="706" width="40" height="60"/><use href="#drop" x="590" y="692" width="40" height="60"/><use href="#drop" x="680" y="708" width="40" height="60"/></g>
+    <g id="s1-dulu">
+     <use href="#music" x="40" y="640" width="180" height="180"/><use href="#teh" x="40" y="880" width="180" height="190"/>
+     <use href="#sparkle" x="200" y="610" width="60" height="60"/><use href="#sparkle" x="15" y="830" width="42" height="42"/><use href="#sparkle" x="205" y="1010" width="48" height="48"/>
+     <path d="M232,700 q14,-14 30,-12 M236,736 q18,-6 32,2" stroke="#ff9f2e" stroke-width="7" stroke-linecap="round" fill="none"/>
+    </g>
+    <g id="s1-kini-c"><use href="#music" x="860" y="640" width="180" height="180"/><use href="#teh" x="860" y="880" width="180" height="190"/></g>
+    <g id="s1-kini-g" class="grey" opacity="0"><use href="#music" x="860" y="640" width="180" height="180"/><use href="#teh" x="860" y="880" width="180" height="190"/></g>
+    <path d="M880,1180 q16,6 30,0 q16,-6 30,0 q16,6 30,0 q16,-6 30,0" stroke="#8d9096" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <text id="s1-q" x="990" y="860" font-family="DV Marker" font-size="64" fill="#8f6cf0" stroke="#17161a" stroke-width="2.5">?</text>
+    <path d="M70,1260 l26,-38 l8,30 l30,-40" stroke="#3cc4e6" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="120" cy="560" r="9" fill="#f08cb4"/><circle cx="975" cy="560" r="8" fill="#3cc4e6"/>
+   </g>
+  </svg>
+  <div class="lbl" style="left:70px;top:1090px"><span class="u-y" style="display:inline-block;transform:rotate(-6deg)">DULU</span></div>
+  <div class="lbl" style="left:912px;top:1105px;color:var(--greyt)"><span class="u-g" style="display:inline-block;transform:rotate(5deg)">KINI</span></div>
+ </div>
+</div>
+
+<!-- ===================== S2 EXPERIENCE 4.2–13.7 ===================== -->
+<div id="s2" class="clip scene" data-start="4.2" data-duration="9.5" data-track-index="2">
+ <div id="s2-cam" class="cam">
+  <div id="s2-hl" class="hl" style="top:190px;font-size:104px;opacity:0">HARI DEMI HARI...</div>
+  <img id="s2-sofa" class="abs" src="assets/img/sofa_withdrawn.png"
+       style="left:188px;top:610px;width:978px;clip-path:polygon(0 0,37% 0,37% 30%,72% 30%,72% 93%,0 93%)">
+  <svg class="svgl" width="1080" height="1920">
+   <g filter="url(#wob)">
+    <!-- battery over her head -->
+    <g id="s2-batt">
+     <rect x="290" y="560" width="170" height="84" rx="14" fill="#fff" class="ink"/>
+     <rect x="462" y="584" width="18" height="36" rx="5" fill="#17161a"/>
+     <rect id="s2-batt-lv" x="302" y="572" width="146" height="60" rx="8" fill="#6fd06b"/>
+     <text id="s2-batt-pct" x="375" y="540" text-anchor="middle" font-family="DV Marker" font-size="44" fill="#e2382f" opacity="0">5%</text>
+    </g>
+    <!-- plate (appetite) -->
+    <g id="s2-plate">
+     <circle cx="170" cy="400" r="98" fill="none" stroke="#ff6b5e" stroke-width="7" stroke-dasharray="14 12"/>
+     <ellipse cx="170" cy="410" rx="74" ry="40" fill="#fff" class="ink"/><ellipse cx="170" cy="406" rx="44" ry="20" fill="#f7e9cc" class="ink5"/>
+     <path d="M78,360 l0,80 M68,360 l0,30 M88,360 l0,30 M262,360 q16,40 0,80" class="ink5" fill="none"/>
+     <text x="205" y="350" font-family="DV Marker" font-size="58" fill="#8f6cf0" stroke="#17161a" stroke-width="2">?</text>
+    </g>
+    <!-- moon + zz (sleep) -->
+    <g id="s2-moon">
+     <circle cx="540" cy="360" r="98" fill="none" stroke="#3cc4e6" stroke-width="7" stroke-dasharray="14 12"/>
+     <path d="M560,290 a70,70 0 1,0 40,120 a56,56 0 1,1 -40,-120z" fill="#ffd43b" class="ink"/>
+     <path d="M500,300 l26,0 l-26,30 l26,0 M470,350 l18,0 l-18,22 l18,0" stroke="#7b61ff" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+     <path d="M440,430 l20,-14 l14,16 l20,-14 l14,16 l20,-14" stroke="#e2382f" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <!-- phone with unread messages -->
+    <g id="s2-phone">
+     <circle cx="880" cy="400" r="98" fill="none" stroke="#7b61ff" stroke-width="7" stroke-dasharray="14 12"/>
+     <rect x="830" y="320" width="100" height="168" rx="16" fill="#3e4962" class="ink"/>
+     <rect x="842" y="338" width="76" height="120" rx="6" fill="#dff3fb"/>
+     <rect x="850" y="350" width="50" height="18" rx="9" fill="#2fae9e"/><rect x="862" y="378" width="48" height="18" rx="9" fill="#f08cb4"/><rect x="850" y="406" width="40" height="18" rx="9" fill="#2fae9e"/>
+     <circle cx="930" cy="322" r="30" fill="#e2382f" class="ink5"/>
+     <text class="s2-n" id="s2-n1" x="930" y="334" text-anchor="middle" font-family="DV Sans" font-weight="900" font-size="32" fill="#fff">3</text>
+     <text class="s2-n" id="s2-n2" x="930" y="334" text-anchor="middle" font-family="DV Sans" font-weight="900" font-size="32" fill="#fff" opacity="0">7</text>
+     <text class="s2-n" id="s2-n3" x="930" y="334" text-anchor="middle" font-family="DV Sans" font-weight="900" font-size="30" fill="#fff" opacity="0">12</text>
+    </g>
+   </g>
+  </svg>
+ </div>
+</div>
+
+<!-- ===================== S3 DOCTOR: when is it depression 13.7–27.6 ===================== -->
+<div id="s3" class="clip scene" data-start="13.7" data-duration="13.9" data-track-index="3">
+ <div id="s3-cam" class="cam">
+  <div id="s3-hl" class="hl" style="top:180px;font-size:100px;opacity:0">KEMURUNGAN<br><span class="t">MAJOR?</span></div>
+  <!-- normal sadness -->
+  <div id="s3-norm" class="abs" style="left:60px;top:430px;width:420px;height:400px">
+   <svg width="420" height="320" style="overflow:visible"><g filter="url(#wob)">
+    <circle cx="250" cy="110" r="62" fill="#ffd43b" class="ink"/>
+    <path d="M250,20 l0,-20 M330,60 l18,-12 M340,130 l22,4" class="ink5" fill="none"/>
+    <use href="#cloud" x="40" y="90" width="300" height="160"/>
+   </g></svg>
+   <div class="lbl" style="left:40px;top:290px;font-size:64px;color:#11897b"><span class="u-y">NORMAL ✓</span></div>
+  </div>
+  <!-- 14-day calendar -->
+  <svg id="s3-cal" class="svgl" width="1080" height="1920" style="opacity:0">
+   <g filter="url(#wob)">
+    <rect x="40" y="430" width="400" height="300" rx="18" fill="#fff" class="ink"/>
+    <rect x="40" y="430" width="400" height="76" rx="18" fill="#ff6b5e" class="ink"/>
+    <rect x="40" y="430" width="400" height="76" rx="18" fill="url(#hatch)"/>
+    <circle cx="120" cy="430" r="12" fill="#fff" class="ink5"/><circle cx="360" cy="430" r="12" fill="#fff" class="ink5"/>
+    <text x="240" y="485" text-anchor="middle" font-family="DV Marker" font-size="44" fill="#fff" stroke="#17161a" stroke-width="2">2 MINGGU</text>
+    <g id="s3-cells" stroke="#17161a" stroke-width="4">
+     <rect id="c1" x="56" y="526" width="48" height="88" rx="6" fill="#fff"/><rect id="c2" x="110" y="526" width="48" height="88" rx="6" fill="#fff"/>
+     <rect id="c3" x="164" y="526" width="48" height="88" rx="6" fill="#fff"/><rect id="c4" x="218" y="526" width="48" height="88" rx="6" fill="#fff"/>
+     <rect id="c5" x="272" y="526" width="48" height="88" rx="6" fill="#fff"/><rect id="c6" x="326" y="526" width="48" height="88" rx="6" fill="#fff"/>
+     <rect id="c7" x="380" y="526" width="48" height="88" rx="6" fill="#fff"/>
+     <rect id="c8" x="56" y="626" width="48" height="88" rx="6" fill="#fff"/><rect id="c9" x="110" y="626" width="48" height="88" rx="6" fill="#fff"/>
+     <rect id="c10" x="164" y="626" width="48" height="88" rx="6" fill="#fff"/><rect id="c11" x="218" y="626" width="48" height="88" rx="6" fill="#fff"/>
+     <rect id="c12" x="272" y="626" width="48" height="88" rx="6" fill="#fff"/><rect id="c13" x="326" y="626" width="48" height="88" rx="6" fill="#fff"/>
+     <rect id="c14" x="380" y="626" width="48" height="88" rx="6" fill="#fff"/>
+    </g>
+   </g>
+  </svg>
+  <div id="s3-2w" class="hl" style="left:60px;width:420px;top:760px;font-size:92px;opacity:0">2 MINGGU+</div>
+  <div id="s3-hampir" class="hand" style="left:84px;top:880px;font-size:46px;opacity:0"><span class="u-y">hampir setiap hari</span></div>
+  <!-- life areas disrupted -->
+  <svg class="svgl" width="1080" height="1920"><g filter="url(#wob)">
+   <g id="s3-i1" opacity="0"><rect x="60" y="990" width="104" height="76" rx="10" fill="#8f6cf0" class="ink"/><path d="M92,990 l0,-16 l40,0 l0,16" class="ink5" fill="none"/><path d="M86,1066 l26,-40 l14,20 l18,-30" stroke="#e2382f" stroke-width="5" fill="none"/></g>
+   <g id="s3-i2" opacity="0"><path d="M200,1030 l60,-48 l60,48 l0,40 l-120,0z" fill="#ffd43b" class="ink"/><rect x="246" y="1036" width="28" height="34" fill="#fff" class="ink5"/><path d="M226,1070 l24,-34 l14,18 l14,-26" stroke="#e2382f" stroke-width="5" fill="none"/></g>
+   <g id="s3-i3" opacity="0"><circle cx="370" cy="1000" r="20" fill="#f08cb4" class="ink5"/><circle cx="420" cy="1000" r="20" fill="#3cc4e6" class="ink5"/>
+     <path d="M340,1070 q0,-46 30,-46 q30,0 30,46z M390,1070 q0,-46 30,-46 q30,0 30,46z" fill="#fff" class="ink5"/><path d="M394,990 l0,80" stroke="#e2382f" stroke-width="6" stroke-dasharray="10 8"/></g>
+  </g></svg>
+  <!-- stamp -->
+  <div id="s3-stamp" class="abs" style="left:60px;top:1092px;width:520px;opacity:0">
+   <div style="transform:rotate(-7deg);border:9px solid #11897b;border-radius:18px;padding:12px 18px;text-align:center;color:#11897b;
+     font-family:'DV Sans';font-weight:900;font-size:38px;line-height:1.05;background:rgba(255,255,255,.85)">HANYA DOKTOR<br>BOLEH SAHKAN</div>
+  </div>
+  <!-- Dr. Azren (mirrored so his open palm presents the board) -->
+  <div id="s3-doc" class="rig" data-talk="1" data-m="0" data-b="0" style="left:400px;top:430px;width:887px;height:1507px">
+   <div class="rs" style="transform:translateX(887px) scale(-1.2,1.2)">
+    <img src="assets/img/drazren_threequarter_explaining.png" style="left:0;top:0;width:739px">
+    <img class="mo mo0" src="assets/img/mouths/explain_t9/mouth_0.png" style="left:198px;top:334px;width:120px">
+    <img class="mo mo1" src="assets/img/mouths/explain_t9/mouth_1.png" style="left:198px;top:334px;width:120px">
+    <img class="mo mo2" src="assets/img/mouths/explain_t9/mouth_2.png" style="left:198px;top:334px;width:120px">
+    <img class="mo mo3" src="assets/img/mouths/explain_t9/mouth_3.png" style="left:198px;top:334px;width:120px">
+    <img class="mo mo4" src="assets/img/mouths/explain_t9/mouth_4.png" style="left:198px;top:334px;width:120px">
+    <svg class="lid" width="739" height="400" style="position:absolute;left:0;top:0;overflow:visible">
+     <ellipse cx="190" cy="272" rx="30" ry="27" fill="#e5b490"/><path d="M162,276 q28,12 56,0" stroke="#17161a" stroke-width="5" fill="none" stroke-linecap="round"/>
+     <ellipse cx="322" cy="268" rx="30" ry="27" fill="#d7a680"/><path d="M294,272 q28,12 56,0" stroke="#17161a" stroke-width="5" fill="none" stroke-linecap="round"/>
+    </svg>
+   </div>
+  </div>
+ </div>
+</div>
+
+<!-- ===================== S4 METAPHOR: colour drains 27.6–37.0 ===================== -->
+<div id="s4" class="clip scene" data-start="27.6" data-duration="9.4" data-track-index="4">
+ <div id="s4-cam" class="cam">
+  <div id="s4-hl" class="hl" style="top:190px;font-size:104px;opacity:0">DUNIA JADI<br><span id="s4-kelabu">KELABU...</span></div>
+  <!-- the colourful world (two copies: colour below, grey above revealed by a sweeping mask) -->
+  <div id="s4-world" class="abs" style="left:0;top:0;width:1080px;height:1920px">
+   <svg class="svgl" width="1080" height="1920"><g filter="url(#wob)" id="s4-col">
+    <path d="M-20,1300 C200,1180 380,1230 560,1290 C760,1350 900,1200 1100,1260 L1100,1920 L-20,1920Z" fill="#7dc96b" class="ink"/>
+    <path d="M-20,1300 C200,1180 380,1230 560,1290 C760,1350 900,1200 1100,1260 L1100,1920 L-20,1920Z" fill="url(#hatch)"/>
+    <circle cx="900" cy="520" r="92" fill="#ffd43b" class="ink"/>
+    <path d="M900,400 l0,-34 M990,450 l26,-20 M1010,530 l32,0 M810,450 l-26,-20" class="ink5" fill="none"/>
+    <path d="M90,700 a280,280 0 0,1 300,-210" stroke="#ff6b5e" stroke-width="22" fill="none" stroke-linecap="round"/>
+    <path d="M110,730 a260,260 0 0,1 280,-200" stroke="#ffd43b" stroke-width="22" fill="none" stroke-linecap="round"/>
+    <path d="M130,760 a240,240 0 0,1 260,-190" stroke="#3cc4e6" stroke-width="22" fill="none" stroke-linecap="round"/>
+    <g><path d="M120,1280 l0,-90" class="ink5"/><circle cx="120" cy="1176" r="30" fill="#f08cb4" class="ink5"/><circle cx="120" cy="1176" r="10" fill="#ffd43b"/></g>
+    <g><path d="M970,1270 l0,-80" class="ink5"/><circle cx="970" cy="1176" r="28" fill="#8f6cf0" class="ink5"/><circle cx="970" cy="1176" r="9" fill="#ffd43b"/></g>
+    <use href="#heart" x="60" y="880" width="110" height="100"/><use href="#star" x="880" y="740" width="80" height="80"/>
+    <use href="#sparkle" x="230" y="840" width="60" height="60"/><use href="#starP" x="820" y="980" width="64" height="64"/>
+   </g></svg>
+   <div id="s4-greycopy" class="abs rv grey" style="left:0;top:0;width:1080px;height:1920px;--rv:100%">
+    <svg class="svgl" width="1080" height="1920"><use href="#s4-col"/></svg>
+   </div>
+  </div>
+  <div id="s4-pat" class="rig" data-talk="0" data-m="0" data-b="0" style="left:165px;top:700px;width:750px;height:1113px">
+   <div class="rs" style="transform:scale(1.2235)">
+    <img src="assets/img/patient_bust_worried_deep.png" style="left:0;top:0;width:613px">
+    <svg class="lid" width="613" height="400" style="position:absolute;left:0;top:0;overflow:visible">
+      <ellipse cx="249" cy="214" rx="38" ry="25" fill="#b06f48"/><path d="M212,216 q37,16 74,0" stroke="#17161a" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <ellipse cx="389" cy="230" rx="42" ry="25" fill="#af643d"/><path d="M348,232 q41,16 82,0" stroke="#17161a" stroke-width="6" fill="none" stroke-linecap="round"/>
+    </svg>
+   </div>
+  </div>
+  <!-- the grey wave front -->
+  <svg id="s4-wave" class="svgl" width="1080" height="1920" style="opacity:0"><g filter="url(#wob)">
+   <path d="M60,300 C20,700 100,1100 40,1700" stroke="#8d9096" stroke-width="26" fill="none" stroke-linecap="round" opacity=".7"/>
+   <path d="M110,260 C70,700 150,1100 90,1760" stroke="#b9bcc2" stroke-width="16" fill="none" stroke-linecap="round" opacity=".7"/>
+  </g></svg>
+  <!-- can't focus -->
+  <svg id="s4-swirl" class="svgl" width="1080" height="1920" style="opacity:0"><g filter="url(#wob)">
+   <path d="M540,640 c40,0 40,-50 0,-50 c-60,0 -60,80 0,80 c80,0 80,-110 0,-110 c-100,0 -100,140 0,140" stroke="#8d9096" stroke-width="7" fill="none" stroke-linecap="round"/>
+  </g></svg>
+  <div id="s4-fokus" class="hand" style="left:650px;top:570px;font-size:52px;color:var(--greyt);opacity:0">fo... kus?</div>
+  <!-- thought bubbles -->
+  <div id="s4-t1" class="abs" style="left:30px;top:460px;width:430px;opacity:0">
+   <svg width="430" height="200" style="position:absolute;left:0;top:0;overflow:visible"><g filter="url(#wob)">
+    <path d="M60,170 C0,170 0,90 60,86 C60,20 160,10 190,50 C230,0 330,10 340,70 C420,70 430,170 350,172 Z" fill="#eef0f2" class="ink5"/>
+    <circle cx="380" cy="210" r="14" fill="#eef0f2" class="ink5"/><circle cx="410" cy="250" r="9" fill="#eef0f2" class="ink5"/>
+   </g></svg>
+   <div class="hand" style="left:40px;top:84px;width:330px;text-align:center;font-size:44px;color:#4a4d52">"Aku tak berguna..."</div>
+  </div>
+  <div id="s4-t2" class="abs" style="left:620px;top:510px;width:440px;opacity:0">
+   <svg width="440" height="200" style="position:absolute;left:0;top:0;overflow:visible"><g filter="url(#wob)">
+    <path d="M70,170 C10,170 10,90 70,86 C70,20 170,10 200,50 C240,0 340,10 350,70 C430,70 440,170 360,172 Z" fill="#eef0f2" class="ink5"/>
+    <circle cx="60" cy="210" r="14" fill="#eef0f2" class="ink5"/><circle cx="34" cy="250" r="9" fill="#eef0f2" class="ink5"/>
+   </g></svg>
+   <div class="hand" style="left:50px;top:84px;width:340px;text-align:center;font-size:44px;color:#4a4d52">"Semua salah aku..."</div>
+  </div>
+ </div>
+</div>
+
+<!-- ===================== S5 NOT WEAKNESS 37.0–46.3 ===================== -->
+<div id="s5" class="clip scene" data-start="37.0" data-duration="9.3" data-track-index="5">
+ <div id="s5-cam" class="cam">
+  <div id="s5-hl" class="hl" style="top:190px;font-size:80px;opacity:0">MASALAH KESIHATAN<br><span class="t">SEBENAR</span></div>
+  <div id="s5-st1" class="sticker" style="left:560px;top:470px;width:400px;font-size:78px;background:#f08cb4;padding:8px 0">MALAS</div>
+  <div id="s5-st2" class="sticker" style="left:600px;top:680px;width:400px;font-size:78px;background:#8f6cf0;padding:8px 0">LEMAH</div>
+  <svg class="svgl" width="1080" height="1920"><g filter="url(#wob)" stroke="#e2382f" stroke-width="16" stroke-linecap="round" fill="none">
+   <path id="s5-x1a" class="draw" pathLength="1" d="M560,460 L960,590"/><path id="s5-x1b" class="draw" pathLength="1" d="M960,460 L560,590"/>
+   <path id="s5-x2a" class="draw" pathLength="1" d="M600,670 L1000,800"/><path id="s5-x2b" class="draw" pathLength="1" d="M1000,670 L600,800"/>
+  </g></svg>
+  <!-- Venn: biological / psychological / social -->
+  <svg class="svgl" width="1080" height="1920"><g filter="url(#wob)">
+   <g id="s5-v1" opacity="0"><circle cx="760" cy="580" r="150" fill="rgba(240,140,180,.55)" class="ink"/>
+     <path d="M720,500 c-30,-30 10,-60 40,-40 c30,-30 80,0 60,30 c30,20 10,60 -20,50 c-10,30 -60,30 -70,0 c-30,0 -40,-30 -10,-40z" fill="#f08cb4" class="ink5"/>
+     <text x="760" y="628" text-anchor="middle" font-family="DV Sans" font-weight="900" font-size="38" fill="#17161a">BIOLOGI</text></g>
+   <g id="s5-v2" opacity="0"><circle cx="630" cy="810" r="150" fill="rgba(143,108,240,.45)" class="ink"/>
+     <path d="M560,810 c-20,-40 30,-60 60,-40 c30,-30 90,-10 80,30 c20,30 -20,50 -50,36 c-30,20 -80,10 -90,-26z" fill="#fff" class="ink5"/>
+     <circle cx="580" cy="870" r="10" fill="#fff" class="ink5"/>
+     <text x="630" y="920" text-anchor="middle" font-family="DV Sans" font-weight="900" font-size="38" fill="#17161a">PSIKOLOGI</text></g>
+   <g id="s5-v3" opacity="0"><circle cx="890" cy="810" r="150" fill="rgba(255,212,59,.55)" class="ink"/>
+     <circle cx="866" cy="770" r="20" fill="#3cc4e6" class="ink5"/><circle cx="916" cy="770" r="20" fill="#ff6b5e" class="ink5"/>
+     <path d="M836,840 q0,-46 30,-46 q30,0 30,46z M886,840 q0,-46 30,-46 q30,0 30,46z" fill="#fff" class="ink5"/>
+     <text x="890" y="910" text-anchor="middle" font-family="DV Sans" font-weight="900" font-size="38" fill="#17161a">SOSIAL</text></g>
+   <use id="s5-heart" href="#heart" x="725" y="700" width="70" height="64" opacity="0"/>
+  </g></svg>
+  <div id="s5-foot" class="hand" style="left:60px;top:366px;width:960px;text-align:center;font-size:31px;line-height:1.1;white-space:normal;color:#3b3d42;opacity:0">
+   * Doktor juga akan periksa punca fizikal lain (cth. tiroid).</div>
+  <!-- Dr. Azren, open palm toward the stickers -->
+  <div id="s5-doc" class="rig" data-talk="1" data-m="0" data-b="0" style="left:-170px;top:600px;width:776px;height:1319px">
+   <div class="rs" style="transform:scale(1.05)">
+    <img src="assets/img/drazren_threequarter_explaining.png" style="left:0;top:0;width:739px">
+    <img class="mo mo0" src="assets/img/mouths/explain_t9/mouth_0.png" style="left:198px;top:334px;width:120px">
+    <img class="mo mo1" src="assets/img/mouths/explain_t9/mouth_1.png" style="left:198px;top:334px;width:120px">
+    <img class="mo mo2" src="assets/img/mouths/explain_t9/mouth_2.png" style="left:198px;top:334px;width:120px">
+    <img class="mo mo3" src="assets/img/mouths/explain_t9/mouth_3.png" style="left:198px;top:334px;width:120px">
+    <img class="mo mo4" src="assets/img/mouths/explain_t9/mouth_4.png" style="left:198px;top:334px;width:120px">
+    <svg class="lid" width="739" height="400" style="position:absolute;left:0;top:0;overflow:visible">
+     <ellipse cx="190" cy="272" rx="30" ry="27" fill="#e5b490"/><path d="M162,276 q28,12 56,0" stroke="#17161a" stroke-width="5" fill="none" stroke-linecap="round"/>
+     <ellipse cx="322" cy="268" rx="30" ry="27" fill="#d7a680"/><path d="M294,272 q28,12 56,0" stroke="#17161a" stroke-width="5" fill="none" stroke-linecap="round"/>
+    </svg>
+   </div>
+  </div>
+ </div>
+</div>
+
+<!-- ===================== S6 SMALL STEPS 46.3–53.4 ===================== -->
+<div id="s6" class="clip scene" data-start="46.3" data-duration="7.1" data-track-index="6">
+ <div id="s6-cam" class="cam">
+  <div id="s6-hl" class="hl" style="top:180px;font-size:96px;opacity:0">LANGKAH KECIL</div>
+  <img id="s6-happy" class="abs" src="assets/img/patient_relieved_upper.png" style="left:770px;top:520px;width:210px;opacity:0">
+  <svg class="svgl" width="1080" height="1920"><g filter="url(#wob)">
+   <path id="s6-stairs" d="M40,1220 L40,1120 L380,1120 L380,960 L720,960 L720,800 L1040,800 L1040,1220 Z" fill="#2fae9e" opacity="0"/>
+   <path id="s6-stairs-h" d="M40,1220 L40,1120 L380,1120 L380,960 L720,960 L720,800 L1040,800 L1040,1220 Z" fill="url(#hatchW)" opacity="0"/>
+   <path id="s6-stairs-l" class="draw" pathLength="1" d="M40,1220 L40,1120 L380,1120 L380,960 L720,960 L720,800 L1040,800 L1040,1220 Z" fill="none" stroke="#17161a" stroke-width="9" stroke-linejoin="round"/>
+   <g id="s6-i1" opacity="0"><path d="M58,1196 q0,-22 22,-22 l32,0 l14,-12 l32,8 q20,5 20,26 z" fill="#ff9f2e" class="ink5"/><path d="M64,1204 l112,0" class="ink5"/></g>
+   <g id="s6-i2" opacity="0"><circle cx="452" cy="1020" r="40" fill="#fff" class="ink5"/><path d="M452,1020 l0,-24 M452,1020 l18,10" class="ink5"/>
+     <path d="M536,990 a28,28 0 1,0 16,50 a22,22 0 1,1 -16,-50z" fill="#ffd43b" class="ink5"/>
+     <ellipse cx="636" cy="1022" rx="42" ry="22" fill="#fff" class="ink5"/><ellipse cx="636" cy="1018" rx="22" ry="11" fill="#f7e9cc" class="ink5"/></g>
+   <g id="s6-i3" opacity="0"><path d="M770,840 l130,0 q16,0 16,16 l0,52 q0,16 -16,16 l-84,0 l-28,24 l4,-24 l-22,0 q-16,0 -16,-16 l0,-52 q0,-16 16,-16z" fill="#f08cb4" class="ink5"/>
+     <use href="#heart" x="806" y="852" width="58" height="54"/></g>
+   <g id="s6-sp1" opacity="0"><circle cx="210" cy="1080" r="12" fill="#ffd43b"/><circle cx="260" cy="1050" r="9" fill="#ff6b5e"/><circle cx="160" cy="1040" r="10" fill="#3cc4e6"/><use href="#sparkle" x="290" y="1010" width="50" height="50"/></g>
+   <g id="s6-sp2" opacity="0"><circle cx="560" cy="920" r="12" fill="#8f6cf0"/><circle cx="610" cy="890" r="9" fill="#ffd43b"/><circle cx="500" cy="890" r="10" fill="#ff6b5e"/><use href="#sparkle" x="630" y="850" width="50" height="50"/></g>
+   <g id="s6-sp3" opacity="0"><circle cx="880" cy="760" r="12" fill="#3cc4e6"/><circle cx="940" cy="730" r="9" fill="#ff6b5e"/><circle cx="820" cy="740" r="10" fill="#ffd43b"/><use href="#star" x="960" y="680" width="52" height="52"/></g>
+  </g></svg>
+  <div id="s6-l1" class="abs" style="left:186px;top:1150px;font-family:'DV Sans';font-weight:900;font-size:34px;color:#fff;-webkit-text-stroke:2px #17161a;paint-order:stroke fill;opacity:0">GERAK SIKIT</div>
+  <div id="s6-l2" class="abs" style="left:390px;top:1080px;width:320px;text-align:center;font-family:'DV Sans';font-weight:900;font-size:34px;line-height:1.1;color:#fff;-webkit-text-stroke:2px #17161a;paint-order:stroke fill;opacity:0">TIDUR &amp; MAKAN<br>IKUT WAKTU</div>
+  <div id="s6-l3" class="abs" style="left:742px;top:970px;width:200px;text-align:center;font-family:'DV Sans';font-weight:900;font-size:38px;color:#fff;-webkit-text-stroke:2px #17161a;paint-order:stroke fill;opacity:0">LUAHKAN</div>
+  <div id="s6-walk" class="abs" style="left:80px;top:650px;width:384px;height:470px">
+   <img src="assets/img/patient_walkaway_clean.png" style="position:absolute;left:0;top:0;width:384px;transform:scaleX(-1)">
+  </div>
+ </div>
+</div>
+
+<!-- ===================== S7 TREATMENT 53.4–61.95 ===================== -->
+<div id="s7" class="clip scene" data-start="53.4" data-duration="8.55" data-track-index="7">
+ <div id="s7-cam" class="cam">
+  <div id="s7-ban" class="abs" style="left:110px;top:190px;width:860px;opacity:0">
+   <div style="transform:rotate(-2deg);background:#18a999;border:6px solid #17161a;border-radius:12px;box-shadow:8px 9px 0 #17161a;
+     text-align:center;font-family:'DV Sans';font-weight:900;font-size:52px;color:#fff;-webkit-text-stroke:2.5px #17161a;paint-order:stroke fill;padding:10px 0 14px">BUKAN PENGGANTI RAWATAN</div>
+  </div>
+  <div id="s7-c1" class="card" style="left:76px;top:330px;width:440px;height:250px;opacity:0">
+   <svg width="450" height="250" style="position:absolute;left:0;top:0"><g filter="url(#wob)">
+    <path d="M40,40 l120,0 q14,0 14,14 l0,52 q0,14 -14,14 l-70,0 l-26,22 l4,-22 l-28,0 q-14,0 -14,-14 l0,-52 q0,-14 14,-14z" fill="#8f6cf0" class="ink5"/>
+    <path d="M60,66 l80,0 M60,90 l56,0" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+    <path d="M250,96 c-30,-30 10,-60 40,-40 c30,-30 80,0 60,30 c30,20 10,60 -20,50 c-10,30 -60,30 -70,0 c-30,0 -40,-30 -10,-40z" fill="#f08cb4" class="ink5"/>
+   </g></svg>
+   <div class="abs" style="left:0;top:146px;width:440px;text-align:center;font-family:'DV Sans';font-weight:900;font-size:38px;line-height:1.05">TERAPI PSIKOLOGI<br><span style="color:#11897b">(CBT)</span></div>
+  </div>
+  <div id="s7-c2" class="card" style="left:564px;top:330px;width:440px;height:250px;opacity:0">
+   <svg width="450" height="250" style="position:absolute;left:0;top:0"><g filter="url(#wob)">
+    <g transform="rotate(-30 225 80)"><rect x="140" y="50" width="170" height="64" rx="32" fill="#fff" class="ink5"/><path d="M225,50 l0,64" class="ink5"/>
+    <path d="M225,52 l52,0 a30,30 0 0,1 0,60 l-52,0z" fill="#ff6b5e" class="ink5"/></g>
+   </g></svg>
+   <div class="abs" style="left:0;top:146px;width:440px;text-align:center;font-family:'DV Sans';font-weight:900;font-size:38px;line-height:1.05">UBAT<br><span style="color:#11897b">bila perlu</span></div>
+  </div>
+  <div id="s7-ok" class="sticker" style="left:260px;top:600px;width:560px;font-size:42px;background:#ffd43b;color:#17161a;-webkit-text-stroke:0;padding:6px 0;opacity:0">✔ TERBUKTI BERKESAN</div>
+  <div id="s7-scene" class="rig" data-talk="1" data-m="0" data-b="0" style="left:0;top:390px;width:1080px;height:1328px">
+   <div class="rs" style="width:1080px;height:1328px;clip-path:polygon(0 21%,34% 21%,34% 34%,66% 34%,66% 21%,100% 21%,100% 100%,0 100%)">
+    <img src="assets/img/table_consult.png" style="left:0;top:0;width:1080px">
+    <img class="mo mo1" src="assets/img/mouths/table_t80/mouth_0.png" style="left:181px;top:548px;width:110px">
+    <img class="mo mo0" src="assets/img/mouths/table_t80/mouth_1.png" style="left:181px;top:548px;width:110px">
+    <img class="mo mo2" src="assets/img/mouths/table_t80/mouth_2.png" style="left:181px;top:548px;width:110px">
+    <img class="mo mo3" src="assets/img/mouths/table_t80/mouth_3.png" style="left:181px;top:548px;width:110px">
+    <img class="mo mo4" src="assets/img/mouths/table_t80/mouth_4.png" style="left:181px;top:548px;width:110px">
+    <svg class="lid" width="1080" height="700" style="position:absolute;left:0;top:0;overflow:visible">
+     <ellipse cx="157" cy="490" rx="24" ry="24" fill="#dfa279"/><path d="M134,494 q23,10 46,0" stroke="#17161a" stroke-width="5" fill="none" stroke-linecap="round"/>
+     <ellipse cx="272" cy="485" rx="24" ry="24" fill="#d29271"/><path d="M249,489 q23,10 46,0" stroke="#17161a" stroke-width="5" fill="none" stroke-linecap="round"/>
+    </svg>
+   </div>
+  </div>
+ </div>
+</div>
+
+<!-- ===================== S8 RED FLAG & HELP 61.95–73.5 ===================== -->
+<div id="s8" class="clip scene" data-start="61.95" data-duration="11.55" data-track-index="8">
+ <div id="s8-cam" class="cam">
+  <div id="s8-hl" class="hl" style="top:180px;font-size:90px;opacity:0">JANGAN TUNGGU.</div>
+  <div id="s8-port" class="abs" style="left:310px;top:300px;width:460px;height:460px">
+   <div style="position:absolute;inset:0;border-radius:50%;overflow:hidden;background:#eaf6f3">
+    <div id="s8-doc" class="rig" data-talk="1" data-m="0" data-b="0" style="left:14px;top:-166px;width:456px;height:1054px">
+     <div class="rs" style="transform:scale(1.2)">
+      <img src="assets/img/drazren_serious_closeup.png" style="left:0;top:0;width:380px">
+      <img class="mo mo1" src="assets/img/mouths/explain_t9/mouth_1.png" style="left:131px;top:379px;width:110px">
+      <img class="mo mo2" src="assets/img/mouths/explain_t9/mouth_2.png" style="left:131px;top:379px;width:110px">
+      <img class="mo mo3" src="assets/img/mouths/explain_t9/mouth_2.png" style="left:131px;top:379px;width:110px">
+      <img class="mo mo4" src="assets/img/mouths/explain_t9/mouth_2.png" style="left:131px;top:379px;width:110px">
+      <svg class="lid" width="380" height="500" style="position:absolute;left:0;top:0;overflow:visible">
+       <ellipse cx="106" cy="303" rx="27" ry="25" fill="#dd8f63"/><path d="M81,307 q25,11 50,0" stroke="#17161a" stroke-width="5" fill="none" stroke-linecap="round"/>
+       <ellipse cx="251" cy="300" rx="27" ry="25" fill="#dba277"/><path d="M226,304 q25,11 50,0" stroke="#17161a" stroke-width="5" fill="none" stroke-linecap="round"/>
+      </svg>
+     </div>
+    </div>
+   </div>
+   <svg width="460" height="460" style="position:absolute;left:0;top:0;overflow:visible"><g filter="url(#wob)">
+    <circle cx="230" cy="230" r="224" fill="none" stroke="#2fae9e" stroke-width="16"/><circle cx="230" cy="230" r="234" fill="none" stroke="#17161a" stroke-width="6"/>
+   </g></svg>
+  </div>
+  <div id="s8-card" class="card" style="left:70px;top:790px;width:860px;height:420px;opacity:0">
+   <div id="s8-hi1" class="abs" style="left:24px;top:22px;width:812px;height:96px;border-radius:12px;background:#ffd43b;opacity:0"></div>
+   <div id="s8-hi2" class="abs" style="left:24px;top:128px;width:812px;height:96px;border-radius:12px;background:#ffd43b;opacity:0"></div>
+   <div id="s8-hi3" class="abs" style="left:24px;top:234px;width:812px;height:96px;border-radius:12px;background:#ffd43b;opacity:0"></div>
+   <svg width="860" height="420" style="position:absolute;left:0;top:0"><use href="#phoneI" x="36" y="34" width="70" height="70"/><use href="#phoneI" x="36" y="140" width="70" height="70"/><use href="#phoneI" x="36" y="246" width="70" height="70"/></svg>
+   <div class="abs" style="left:124px;top:30px;font-weight:900;font-size:50px;line-height:1">Talian HEAL 15555</div>
+   <div class="abs" style="left:126px;top:84px;font-weight:700;font-size:28px;color:#3b3d42">8 pagi – 12 malam, setiap hari</div>
+   <div class="abs" style="left:124px;top:136px;font-weight:900;font-size:50px;line-height:1">Befrienders 03-7627 2929</div>
+   <div class="abs" style="left:126px;top:190px;font-weight:700;font-size:28px;color:#3b3d42">24 jam, percuma &amp; sulit</div>
+   <div class="abs" style="left:124px;top:242px;font-weight:900;font-size:50px;line-height:1">Kecemasan <span style="color:#c8323a">999</span></div>
+   <div class="abs" style="left:126px;top:296px;font-weight:700;font-size:28px;color:#3b3d42">jika dalam bahaya segera</div>
+   <div class="hand" style="left:36px;top:350px;font-size:33px;color:#11897b">Rasa tak boleh berfungsi langsung? Jumpa doktor segera.</div>
+  </div>
+ </div>
+</div>
+
+<!-- ===================== S9a HOPE: colour returns 73.5–77.4 ===================== -->
+<div id="s9a" class="clip scene" data-start="73.5" data-duration="3.9" data-track-index="9">
+ <div id="s9a-cam" class="cam">
+  <div id="s9a-h1" class="hl" style="top:180px;font-size:100px">WARNA BOLEH<br><span class="t">KEMBALI</span></div>
+  <div id="s9a-h2" class="hl" style="top:180px;font-size:100px;opacity:0">ANDA TAK<br><span class="t">KESEORANGAN</span></div>
+  <img id="s9a-bub" class="abs" src="assets/img/heart_bubble_hills.png" style="left:162px;top:410px;width:756px">
+  <img id="s9a-bubg" class="abs rvr grey" src="assets/img/heart_bubble_hills.png" style="left:162px;top:410px;width:756px;--rv:100%">
+  <svg class="svgl" width="1080" height="1920"><g filter="url(#wob)" id="s9a-conf" opacity="0">
+   <use href="#sparkle" x="120" y="420" width="70" height="70"/><use href="#star" x="900" y="430" width="70" height="70"/>
+   <use href="#starP" x="80" y="760" width="60" height="60"/><use href="#sparkle" x="940" y="700" width="60" height="60"/>
+   <use href="#heart" x="150" y="600" width="70" height="64"/><circle cx="1000" cy="560" r="10" fill="#3cc4e6"/><circle cx="60" cy="560" r="10" fill="#ffd43b"/>
+  </g></svg>
+  <img id="s9a-pat" class="abs grey" src="assets/img/patient_relieved_upper.png" style="left:-10px;top:640px;width:430px">
+  <div id="s9a-doc" class="rig grey" data-talk="1" data-m="0" data-b="0" style="left:470px;top:760px;width:665px;height:1130px">
+   <div class="rs" style="transform:translateX(665px) scale(-0.9,0.9)">
+    <img src="assets/img/drazren_threequarter_explaining.png" style="left:0;top:0;width:739px">
+    <img class="mo mo0" src="assets/img/mouths/explain_t9/mouth_0.png" style="left:198px;top:334px;width:120px">
+    <img class="mo mo1" src="assets/img/mouths/explain_t9/mouth_1.png" style="left:198px;top:334px;width:120px">
+    <img class="mo mo2" src="assets/img/mouths/explain_t9/mouth_2.png" style="left:198px;top:334px;width:120px">
+    <img class="mo mo3" src="assets/img/mouths/explain_t9/mouth_3.png" style="left:198px;top:334px;width:120px">
+    <img class="mo mo4" src="assets/img/mouths/explain_t9/mouth_4.png" style="left:198px;top:334px;width:120px">
+    <svg class="lid" width="739" height="400" style="position:absolute;left:0;top:0;overflow:visible">
+     <ellipse cx="190" cy="272" rx="30" ry="27" fill="#e5b490"/><path d="M162,276 q28,12 56,0" stroke="#17161a" stroke-width="5" fill="none" stroke-linecap="round"/>
+     <ellipse cx="322" cy="268" rx="30" ry="27" fill="#d7a680"/><path d="M294,272 q28,12 56,0" stroke="#17161a" stroke-width="5" fill="none" stroke-linecap="round"/>
+    </svg>
+   </div>
+  </div>
+  <svg id="s9a-hill" class="svgl grey" width="1080" height="1920"><g filter="url(#wob)">
+   <path d="M-20,1230 C180,1150 360,1190 540,1220 C740,1255 900,1150 1100,1190 L1100,1940 L-20,1940Z" fill="#7dc96b" class="ink"/>
+   <path d="M-20,1230 C180,1150 360,1190 540,1220 C740,1255 900,1150 1100,1190 L1100,1940 L-20,1940Z" fill="url(#hatch)"/>
+   <g><path d="M120,1300 l0,-60" class="ink5"/><circle cx="120" cy="1232" r="22" fill="#f08cb4" class="ink5"/><circle cx="120" cy="1232" r="8" fill="#ffd43b"/></g>
+   <g><path d="M960,1290 l0,-56" class="ink5"/><circle cx="960" cy="1226" r="22" fill="#8f6cf0" class="ink5"/><circle cx="960" cy="1226" r="8" fill="#ffd43b"/></g>
+  </g></svg>
+ </div>
+</div>
+
+<!-- ===================== S9b OUTRO 77.4–85.3 ===================== -->
+<div id="s9b" class="clip scene" data-start="77.4" data-duration="7.9" data-track-index="11">
+ <div id="s9b-cam" class="cam">
+  <div id="s9b-cta" class="abs" style="left:110px;top:190px;width:860px;opacity:0">
+   <div style="transform:rotate(-2deg);background:#f25f5c;border:6px solid #17161a;border-radius:14px;box-shadow:8px 9px 0 #17161a;text-align:center;
+     font-family:'DV Sans';font-weight:900;font-size:54px;line-height:1.08;color:#fff;-webkit-text-stroke:2.5px #17161a;paint-order:stroke fill;padding:12px 0 16px">SHARE DENGAN<br>ORANG TERSAYANG ♥</div>
+  </div>
+  <div id="s9b-lock1" class="hl" style="top:430px;font-size:132px;opacity:0">Dr. Azren</div>
+  <div id="s9b-lock2" class="abs" style="left:0;top:585px;width:1080px;text-align:center;font-family:'DV Sans';font-weight:900;font-size:62px;color:#11897b;opacity:0">| Spread Positivity |</div>
+  <svg class="svgl" width="1080" height="1920"><g filter="url(#wob)">
+   <g id="s9b-conf" opacity="0">
+    <use href="#sparkle" x="80" y="420" width="70" height="70"/><use href="#sparkle" x="930" y="400" width="80" height="80"/>
+    <use href="#star" x="60" y="640" width="64" height="64"/><use href="#starP" x="960" y="640" width="60" height="60"/>
+    <use href="#heart" x="880" y="830" width="90" height="82"/><use href="#sparkle" x="820" y="1000" width="56" height="56"/>
+    <circle cx="200" cy="380" r="10" fill="#3cc4e6"/><circle cx="880" cy="560" r="10" fill="#f08cb4"/><circle cx="1000" cy="900" r="8" fill="#ffd43b"/>
+   </g>
+  </g></svg>
+  <div id="s9b-doc" class="rig" data-talk="1" data-m="0" data-b="0" style="left:90px;top:700px;width:813px;height:1382px">
+   <div class="rs" style="transform:scale(1.1)">
+    <img src="assets/img/drazren_threequarter_explaining.png" style="left:0;top:0;width:739px">
+    <img class="mo mo0" src="assets/img/mouths/explain_t9/mouth_0.png" style="left:198px;top:334px;width:120px">
+    <img class="mo mo1" src="assets/img/mouths/explain_t9/mouth_1.png" style="left:198px;top:334px;width:120px">
+    <img class="mo mo2" src="assets/img/mouths/explain_t9/mouth_2.png" style="left:198px;top:334px;width:120px">
+    <img class="mo mo3" src="assets/img/mouths/explain_t9/mouth_3.png" style="left:198px;top:334px;width:120px">
+    <img class="mo mo4" src="assets/img/mouths/explain_t9/mouth_4.png" style="left:198px;top:334px;width:120px">
+    <svg class="lid" width="739" height="400" style="position:absolute;left:0;top:0;overflow:visible">
+     <ellipse cx="190" cy="272" rx="30" ry="27" fill="#e5b490"/><path d="M162,276 q28,12 56,0" stroke="#17161a" stroke-width="5" fill="none" stroke-linecap="round"/>
+     <ellipse cx="322" cy="268" rx="30" ry="27" fill="#d7a680"/><path d="M294,272 q28,12 56,0" stroke="#17161a" stroke-width="5" fill="none" stroke-linecap="round"/>
+    </svg>
+   </div>
+  </div>
+  <div id="s9b-disc" class="abs" style="left:110px;top:668px;width:860px;text-align:center;font-family:'DV Sans';font-weight:700;font-size:28px;color:#3b3d42;opacity:0">
+   Pendidikan kesihatan umum, bukan diagnosis.</div>
+ </div>
+</div>
+
+<!-- ===================== CAPTIONS ===================== -->
+<div id="cap00" class="clip cap" data-start="0.250" data-duration="1.135" data-track-index="10"><div id="cap00-in" class="cap-in bar1">Benda yang dulu buat</div></div>
+<div id="cap01" class="clip cap" data-start="1.395" data-duration="1.082" data-track-index="10"><div id="cap01-in" class="cap-in bar2">anda <span class="k">gembira...</span></div></div>
+<div id="cap02" class="clip cap" data-start="2.690" data-duration="1.363" data-track-index="10"><div id="cap02-in" class="cap-in bar3">sekarang rasa <span class="k">kosong?</span></div></div>
+<div id="cap03" class="clip cap" data-start="4.306" data-duration="1.180" data-track-index="10"><div id="cap03-in" class="cap-in bar4">Bangun pagi pun dah</div></div>
+<div id="cap04" class="clip cap" data-start="5.496" data-duration="0.578" data-track-index="10"><div id="cap04-in" class="cap-in bar1"><span class="k">letih.</span></div></div>
+<div id="cap05" class="clip cap" data-start="6.179" data-duration="1.539" data-track-index="10"><div id="cap05-in" class="cap-in bar2">Selera <span class="k">makan</span> berubah,</div></div>
+<div id="cap06" class="clip cap" data-start="7.728" data-duration="1.176" data-track-index="10"><div id="cap06-in" class="cap-in bar3">tidur <span class="k">terganggu.</span></div></div>
+<div id="cap07" class="clip cap" data-start="9.050" data-duration="1.654" data-track-index="10"><div id="cap07-in" class="cap-in bar4">Mesej kawan pun <span class="k">dibiarkan.</span></div></div>
+<div id="cap08" class="clip cap" data-start="10.913" data-duration="1.293" data-track-index="10"><div id="cap08-in" class="cap-in bar1">Dan ia berlarutan...</div></div>
+<div id="cap09" class="clip cap" data-start="12.216" data-duration="1.397" data-track-index="10"><div id="cap09-in" class="cap-in bar2"><span class="k">hari</span> demi hari.</div></div>
+<div id="cap10" class="clip cap" data-start="13.817" data-duration="1.615" data-track-index="10"><div id="cap10-in" class="cap-in bar3">Sedih sekali-sekala itu</div></div>
+<div id="cap11" class="clip cap" data-start="15.442" data-duration="0.545" data-track-index="10"><div id="cap11-in" class="cap-in bar4"><span class="k">normal.</span></div></div>
+<div id="cap12" class="clip cap" data-start="16.017" data-duration="1.384" data-track-index="10"><div id="cap12-in" class="cap-in bar1">Tapi kalau rasa sedih,</div></div>
+<div id="cap13" class="clip cap" data-start="17.411" data-duration="1.383" data-track-index="10"><div id="cap13-in" class="cap-in bar2"><span class="k">kosong,</span> atau hilang minat</div></div>
+<div id="cap14" class="clip cap" data-start="18.804" data-duration="1.532" data-track-index="10"><div id="cap14-in" class="cap-in bar3">ini berlaku hampir <span class="k">setiap</span></div></div>
+<div id="cap15" class="clip cap" data-start="20.346" data-duration="1.508" data-track-index="10"><div id="cap15-in" class="cap-in bar4"><span class="k">hari,</span> sekurang-kurangnya</div></div>
+<div id="cap16" class="clip cap" data-start="21.864" data-duration="0.560" data-track-index="10"><div id="cap16-in" class="cap-in bar1">dua <span class="k">minggu,</span></div></div>
+<div id="cap17" class="clip cap" data-start="22.434" data-duration="1.748" data-track-index="10"><div id="cap17-in" class="cap-in bar2">sampai mengganggu <span class="k">kehidupan...</span></div></div>
+<div id="cap18" class="clip cap" data-start="24.244" data-duration="1.225" data-track-index="10"><div id="cap18-in" class="cap-in bar3">ia mungkin <span class="k">kemurungan</span></div></div>
+<div id="cap19" class="clip cap" data-start="25.479" data-duration="0.561" data-track-index="10"><div id="cap19-in" class="cap-in bar4">major.</div></div>
+<div id="cap20" class="clip cap" data-start="26.065" data-duration="1.525" data-track-index="10"><div id="cap20-in" class="cap-in bar1">Hanya <span class="k">doktor</span> boleh sahkan.</div></div>
+<div id="cap21" class="clip cap" data-start="27.753" data-duration="1.341" data-track-index="10"><div id="cap21-in" class="cap-in bar2">Bayangkan dunia anda yang</div></div>
+<div id="cap22" class="clip cap" data-start="29.104" data-duration="0.747" data-track-index="10"><div id="cap22-in" class="cap-in bar3">penuh warna,</div></div>
+<div id="cap23" class="clip cap" data-start="29.861" data-duration="1.977" data-track-index="10"><div id="cap23-in" class="cap-in bar4">perlahan-lahan jadi <span class="k">kelabu.</span></div></div>
+<div id="cap24" class="clip cap" data-start="31.905" data-duration="1.361" data-track-index="10"><div id="cap24-in" class="cap-in bar1">Susah nak <span class="k">fokus.</span></div></div>
+<div id="cap25" class="clip cap" data-start="33.276" data-duration="1.155" data-track-index="10"><div id="cap25-in" class="cap-in bar2">Ada yang rasa diri</div></div>
+<div id="cap26" class="clip cap" data-start="34.441" data-duration="0.642" data-track-index="10"><div id="cap26-in" class="cap-in bar3">tak <span class="k">berguna,</span></div></div>
+<div id="cap27" class="clip cap" data-start="35.093" data-duration="1.294" data-track-index="10"><div id="cap27-in" class="cap-in bar4">atau rasa <span class="k">bersalah</span> yang</div></div>
+<div id="cap28" class="clip cap" data-start="36.397" data-duration="0.664" data-track-index="10"><div id="cap28-in" class="cap-in bar1">melampau.</div></div>
+<div id="cap29" class="clip cap" data-start="37.150" data-duration="1.069" data-track-index="10"><div id="cap29-in" class="cap-in bar2">Ini bukan <span class="k">malas,</span></div></div>
+<div id="cap30" class="clip cap" data-start="38.229" data-duration="1.275" data-track-index="10"><div id="cap30-in" class="cap-in bar3">dan bukan tanda anda</div></div>
+<div id="cap31" class="clip cap" data-start="39.514" data-duration="0.559" data-track-index="10"><div id="cap31-in" class="cap-in bar4"><span class="k">lemah.</span></div></div>
+<div id="cap32" class="clip cap" data-start="40.090" data-duration="1.599" data-track-index="10"><div id="cap32-in" class="cap-in bar1"><span class="k">Kemurungan</span> ialah masalah</div></div>
+<div id="cap33" class="clip cap" data-start="41.699" data-duration="1.222" data-track-index="10"><div id="cap33-in" class="cap-in bar2">kesihatan <span class="k">sebenar,</span></div></div>
+<div id="cap34" class="clip cap" data-start="42.931" data-duration="1.278" data-track-index="10"><div id="cap34-in" class="cap-in bar3">hasil gabungan faktor</div></div>
+<div id="cap35" class="clip cap" data-start="44.219" data-duration="1.438" data-track-index="10"><div id="cap35-in" class="cap-in bar4"><span class="k">biologi,</span> psikologi dan</div></div>
+<div id="cap36" class="clip cap" data-start="45.667" data-duration="0.576" data-track-index="10"><div id="cap36-in" class="cap-in bar1"><span class="k">sosial.</span></div></div>
+<div id="cap37" class="clip cap" data-start="46.393" data-duration="1.423" data-track-index="10"><div id="cap37-in" class="cap-in bar2">Mula dengan langkah <span class="k">kecil.</span></div></div>
+<div id="cap38" class="clip cap" data-start="47.826" data-duration="1.176" data-track-index="10"><div id="cap38-in" class="cap-in bar3"><span class="k">Bergerak</span> sedikit setiap</div></div>
+<div id="cap39" class="clip cap" data-start="49.012" data-duration="0.493" data-track-index="10"><div id="cap39-in" class="cap-in bar4"><span class="k">hari.</span></div></div>
+<div id="cap40" class="clip cap" data-start="49.515" data-duration="1.245" data-track-index="10"><div id="cap40-in" class="cap-in bar1">Jaga waktu tidur dan</div></div>
+<div id="cap41" class="clip cap" data-start="50.770" data-duration="0.551" data-track-index="10"><div id="cap41-in" class="cap-in bar2"><span class="k">makan.</span></div></div>
+<div id="cap42" class="clip cap" data-start="51.335" data-duration="1.172" data-track-index="10"><div id="cap42-in" class="cap-in bar3"><span class="k">Luahkan</span> pada orang yang</div></div>
+<div id="cap43" class="clip cap" data-start="52.517" data-duration="0.861" data-track-index="10"><div id="cap43-in" class="cap-in bar4">anda percaya.</div></div>
+<div id="cap44" class="clip cap" data-start="53.441" data-duration="1.403" data-track-index="10"><div id="cap44-in" class="cap-in bar1">Tapi langkah ini bukan</div></div>
+<div id="cap45" class="clip cap" data-start="54.854" data-duration="1.192" data-track-index="10"><div id="cap45-in" class="cap-in bar2">pengganti <span class="k">rawatan.</span></div></div>
+<div id="cap46" class="clip cap" data-start="56.056" data-duration="0.698" data-track-index="10"><div id="cap46-in" class="cap-in bar3">Jumpa <span class="k">doktor,</span></div></div>
+<div id="cap47" class="clip cap" data-start="56.764" data-duration="1.656" data-track-index="10"><div id="cap47-in" class="cap-in bar4">kerana terapi <span class="k">psikologi</span></div></div>
+<div id="cap48" class="clip cap" data-start="58.430" data-duration="1.000" data-track-index="10"><div id="cap48-in" class="cap-in bar1">seperti <span class="k">CBT,</span></div></div>
+<div id="cap49" class="clip cap" data-start="59.440" data-duration="1.256" data-track-index="10"><div id="cap49-in" class="cap-in bar2">dan <span class="k">ubat</span> bila perlu,</div></div>
+<div id="cap50" class="clip cap" data-start="60.706" data-duration="1.210" data-track-index="10"><div id="cap50-in" class="cap-in bar3">terbukti <span class="k">berkesan.</span></div></div>
+<div id="cap51" class="clip cap" data-start="61.986" data-duration="1.530" data-track-index="10"><div id="cap51-in" class="cap-in bar4">Dan jika terlintas fikiran</div></div>
+<div id="cap52" class="clip cap" data-start="63.526" data-duration="1.479" data-track-index="10"><div id="cap52-in" class="cap-in bar1">untuk <span class="k">mencederakan</span> diri,</div></div>
+<div id="cap53" class="clip cap" data-start="65.015" data-duration="0.879" data-track-index="10"><div id="cap53-in" class="cap-in bar2">jangan <span class="k">tunggu.</span></div></div>
+<div id="cap54" class="clip cap" data-start="65.904" data-duration="1.165" data-track-index="10"><div id="cap54-in" class="cap-in bar3">Hubungi Talian <span class="k">HEAL,</span></div></div>
+<div id="cap55" class="clip cap" data-start="67.079" data-duration="3.086" data-track-index="10"><div id="cap55-in" class="cap-in bar4"><span class="k">15555,</span> atau Befrienders.</div></div>
+<div id="cap56" class="clip cap" data-start="70.175" data-duration="0.953" data-track-index="10"><div id="cap56-in" class="cap-in bar1">Jika dalam bahaya,</div></div>
+<div id="cap57" class="clip cap" data-start="71.138" data-duration="2.352" data-track-index="10"><div id="cap57-in" class="cap-in bar2">terus hubungi <span class="k">999.</span></div></div>
+<div id="cap58" class="clip cap" data-start="73.534" data-duration="1.484" data-track-index="10"><div id="cap58-in" class="cap-in bar3">Warna dalam hidup anda</div></div>
+<div id="cap59" class="clip cap" data-start="75.028" data-duration="0.896" data-track-index="10"><div id="cap59-in" class="cap-in bar4">boleh <span class="k">kembali.</span></div></div>
+<div id="cap60" class="clip cap" data-start="75.934" data-duration="1.466" data-track-index="10"><div id="cap60-in" class="cap-in bar1">Anda tak <span class="k">keseorangan.</span></div></div>
+<div id="cap61" class="clip cap" data-start="77.410" data-duration="1.306" data-track-index="10"><div id="cap61-in" class="cap-in bar2">Share video ni dengan</div></div>
+<div id="cap62" class="clip cap" data-start="78.726" data-duration="1.149" data-track-index="10"><div id="cap62-in" class="cap-in bar3">orang yang anda <span class="k">sayang.</span></div></div>
+<div id="cap63" class="clip cap" data-start="79.885" data-duration="0.938" data-track-index="10"><div id="cap63-in" class="cap-in bar4">Saya Dr. <span class="k">Azren.</span></div></div>
+<div id="cap64" class="clip cap" data-start="80.833" data-duration="1.250" data-track-index="10"><div id="cap64-in" class="cap-in bar1">Spread <span class="k">positivity!</span></div></div>
+
+<!-- ===================== AUDIO ===================== -->
+<audio id="vo" class="clip" data-start="0.3" data-track-index="20" data-volume="1" src="assets/audio/vo.mp3"></audio>
+<audio id="bgm" class="clip" data-start="0" data-duration="85.3" data-track-index="21" data-volume="1" src="assets/audio/bed.mp3"
+  data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0.6},{"t":0.35,"v":0.6},{"t":0.95,"v":0.2},{"t":61.6,"v":0.2},{"t":62.4,"v":0.11},{"t":73.2,"v":0.11},{"t":74.0,"v":0.24},{"t":81.9,"v":0.24},{"t":82.5,"v":0.6},{"t":84.4,"v":0.6},{"t":85.3,"v":0}]}]}'></audio>
+<audio id="sx-1" class="clip" data-start="1.0" data-duration="0.57" data-track-index="30" data-volume="0.3" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sx-2" class="clip" data-start="2.75" data-duration="1.2" data-track-index="31" data-volume="0.22" src="assets/sfx/whoosh-cinematic.mp3"></audio>
+<audio id="sx-3" class="clip" data-start="6.2" data-duration="0.72" data-track-index="32" data-volume="0.4" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-4" class="clip" data-start="7.75" data-duration="0.72" data-track-index="33" data-volume="0.4" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-5" class="clip" data-start="9.1" data-duration="1.5" data-track-index="34" data-volume="0.22" src="assets/sfx/notification.mp3"></audio>
+<audio id="sx-6" class="clip" data-start="13.72" data-duration="0.57" data-track-index="35" data-volume="0.4" src="assets/sfx/whoosh.mp3"></audio>
+<audio id="sx-7" class="clip" data-start="21.9" data-duration="0.72" data-track-index="36" data-volume="0.45" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-8" class="clip" data-start="26.12" data-duration="1.0" data-track-index="37" data-volume="0.4" src="assets/sfx/impact-bass-2.mp3"></audio>
+<audio id="sx-9" class="clip" data-start="29.9" data-duration="1.6" data-track-index="38" data-volume="0.2" src="assets/sfx/whoosh-cinematic.mp3"></audio>
+<audio id="sx-10" class="clip" data-start="33.3" data-duration="0.72" data-track-index="39" data-volume="0.3" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-11" class="clip" data-start="37.9" data-duration="0.37" data-track-index="40" data-volume="0.5" src="assets/sfx/click.mp3"></audio>
+<audio id="sx-12" class="clip" data-start="39.55" data-duration="0.37" data-track-index="41" data-volume="0.5" src="assets/sfx/click.mp3"></audio>
+<audio id="sx-13" class="clip" data-start="44.25" data-duration="0.72" data-track-index="42" data-volume="0.35" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-14" class="clip" data-start="44.78" data-duration="0.72" data-track-index="43" data-volume="0.35" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-15" class="clip" data-start="45.7" data-duration="0.72" data-track-index="44" data-volume="0.35" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-16" class="clip" data-start="47.85" data-duration="1.8" data-track-index="45" data-volume="0.3" src="assets/sfx/sparkle.mp3"></audio>
+<audio id="sx-17" class="clip" data-start="49.55" data-duration="1.8" data-track-index="46" data-volume="0.3" src="assets/sfx/sparkle.mp3"></audio>
+<audio id="sx-18" class="clip" data-start="51.35" data-duration="1.8" data-track-index="47" data-volume="0.3" src="assets/sfx/sparkle.mp3"></audio>
+<audio id="sx-19" class="clip" data-start="53.5" data-duration="0.57" data-track-index="48" data-volume="0.35" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sx-20" class="clip" data-start="60.75" data-duration="1.4" data-track-index="49" data-volume="0.4" src="assets/sfx/chime.mp3"></audio>
+<audio id="sx-21" class="clip" data-start="62.3" data-duration="0.57" data-track-index="50" data-volume="0.25" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sx-22" class="clip" data-start="73.6" data-duration="1.8" data-track-index="51" data-volume="0.45" src="assets/sfx/sparkle.mp3"></audio>
+<audio id="sx-23" class="clip" data-start="80.85" data-duration="1.8" data-track-index="52" data-volume="0.4" src="assets/sfx/sparkle.mp3"></audio>
+
+<script>
+window.__timelines = window.__timelines || {};
+const tl = gsap.timeline({ paused: true });
+const E3 = "power3.out";
+function pop(s, t, d = 0.35) { tl.fromTo(s, { scale: 0, opacity: 0, transformOrigin: "50% 50%" }, { scale: 1, opacity: 1, duration: d, ease: "back.out(2)" }, t); }
+function rise(s, t, d = 0.4) { tl.fromTo(s, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: d, ease: E3 }, t); }
+function fade(s, t, d = 0.3, to = 0) { tl.to(s, { opacity: to, duration: d }, t); }
+function draw(s, t, d = 0.45) { tl.fromTo(s, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: d, ease: "power1.inOut" }, t); }
+function slam(s, t, r = -2) { tl.fromTo(s, { scale: 1.5, opacity: 0, rotation: r - 6 }, { scale: 1, opacity: 1, rotation: r, duration: 0.32, ease: "back.out(1.8)" }, t); }
+function bob(s, t, d, a = 1.6) { const n = Math.max(1, Math.round(d / 1.4)); tl.fromTo(s, { rotation: -a / 2 }, { rotation: a / 2, duration: d / n, yoyo: true, repeat: n - 1, ease: "sine.inOut", transformOrigin: "50% 100%" }, t); }
+function floaty(s, t, d, a = 10) { const n = Math.max(2, 2 * Math.round(d / 2.4)); tl.fromTo(s, { y: 0 }, { y: -a, duration: d / n, yoyo: true, repeat: n - 1, ease: "sine.inOut" }, t); }
+function cam(s, t, d, from, to) { tl.fromTo(s, { scale: from }, { scale: to, duration: d, ease: "sine.inOut" }, t); }
+
+/* ---- S1 hook (frame 0 already composed) ---- */
+cam("#s1-cam", 0, 4.2, 1.0, 1.045);
+tl.fromTo("#s1-h1", { scale: 0.94 }, { scale: 1, duration: 0.35, ease: "back.out(2)" }, 0);
+tl.fromTo("#s1-h2", { scale: 0.94 }, { scale: 1, duration: 0.35, ease: "back.out(2)" }, 0.08);
+tl.set("#s1-arrow", { opacity: 1 }, 0.9); draw("#s1-arrow", 0.9, 0.9); tl.set("#s1-ahead", { opacity: 1 }, 1.78);
+tl.fromTo("#s1-cloud", { x: 160, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: E3 }, 2.6);
+tl.fromTo("#s1-drops", { y: -30, opacity: 0 }, { y: 30, opacity: 1, duration: 0.7, ease: "none", repeat: 1 }, 3.0);
+tl.to("#s1-kini-g", { opacity: 1, duration: 0.7 }, 2.75); tl.to("#s1-kini-c", { opacity: 0, duration: 0.7 }, 2.75);
+tl.to("#s1-kosong", { color: "#6d7076", textShadow: "-7px 6px 0 #c3c6cb, 7px 9px 0 #dfe1e4", duration: 0.5 }, 3.5);
+floaty("#s1-dulu", 0.2, 3.8, 8);
+tl.fromTo("#s1-pat", { rotation: 0 }, { rotation: -1.2, duration: 2.2, ease: "sine.inOut", transformOrigin: "50% 100%" }, 1.8);
+
+/* ---- S2 experience ---- */
+cam("#s2-cam", 4.2, 9.5, 1.0, 1.05);
+tl.fromTo("#s2-sofa", { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.35, ease: E3 }, 4.2);
+pop("#s2-batt", 4.36);
+tl.fromTo("#s2-batt-lv", { attr: { width: 146 }, fill: "#6fd06b" }, { attr: { width: 12 }, fill: "#e2382f", duration: 1.3, ease: "power1.in" }, 4.6);
+tl.to("#s2-batt-pct", { opacity: 1, duration: 0.2 }, 5.6);
+tl.fromTo("#s2-batt", { x: 0 }, { x: 4, duration: 0.07, yoyo: true, repeat: 5 }, 5.65);
+pop("#s2-plate", 6.23); pop("#s2-moon", 7.78); pop("#s2-phone", 9.1);
+tl.set("#s2-n1", { opacity: 0 }, 9.6); tl.set("#s2-n2", { opacity: 1 }, 9.6);
+tl.set("#s2-n2", { opacity: 0 }, 10.1); tl.set("#s2-n3", { opacity: 1 }, 10.1);
+tl.fromTo("#s2-phone", { rotation: -3 }, { rotation: 3, duration: 0.08, yoyo: true, repeat: 7, transformOrigin: "50% 50%" }, 9.5);
+slam("#s2-hl", 10.96, -1);
+tl.fromTo(["#s2-sofa", "#s2-plate", "#s2-moon", "#s2-phone", "#s2-batt"], { filter: "grayscale(0)" }, { filter: "grayscale(0.75)", duration: 2.2 }, 11.3);
+
+/* ---- S3 doctor explains ---- */
+tl.fromTo("#s3-doc", { x: 620 }, { x: 0, duration: 0.55, ease: "power2.out" }, 13.72);
+bob("#s3-doc", 13.75, 0.7, 4);
+bob("#s3-doc", 14.6, 12.9, 1.4);
+rise("#s3-norm", 13.9, 0.45);
+fade("#s3-norm", 16.0, 0.3);
+rise("#s3-cal", 16.1, 0.4);
+["#c1","#c2","#c3","#c4","#c5","#c6","#c7","#c8","#c9","#c10","#c11","#c12","#c13","#c14"].forEach((c, i) => {
+  const t = 17.0 + 4.9 * Math.pow(i / 13, 0.8);
+  tl.to(c, { fill: "#9aa0a8", duration: 0.12 }, t);
+});
+rise("#s3-hampir", 19.65, 0.35);
+slam("#s3-2w", 21.9, -3);
+pop("#s3-i1", 22.85, 0.3); pop("#s3-i2", 23.05, 0.3); pop("#s3-i3", 23.25, 0.3);
+slam("#s3-hl", 24.86, -1);
+cam("#s3-cam", 24.8, 2.8, 1.0, 1.03);
+slam("#s3-stamp", 26.12, 0);
+
+/* ---- S4 the world turns grey ---- */
+tl.fromTo("#s4-world", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 27.6);
+cam("#s4-cam", 27.6, 9.4, 1.05, 1.0);
+slam("#s4-hl", 27.8, -1);
+tl.fromTo("#s4-greycopy", { "--rv": "100%" }, { "--rv": "0%", duration: 1.7, ease: "power1.inOut" }, 29.9);
+tl.fromTo("#s4-wave", { opacity: 0, x: -200 }, { opacity: 1, x: 1100, duration: 1.7, ease: "power1.inOut" }, 29.9);
+tl.to("#s4-wave", { opacity: 0, duration: 0.2 }, 31.5);
+tl.fromTo("#s4-pat", { filter: "grayscale(0)" }, { filter: "grayscale(0.8)", duration: 1.0 }, 30.4);
+tl.to("#s4-kelabu", { color: "#6d7076", textShadow: "-7px 6px 0 #c3c6cb, 7px 9px 0 #dfe1e4", duration: 0.5 }, 31.1);
+tl.fromTo("#s4-swirl", { opacity: 0, rotation: 0 }, { opacity: 1, rotation: 200, duration: 1.4, ease: "sine.inOut", transformOrigin: "540px 620px" }, 31.95);
+tl.fromTo("#s4-fokus", { opacity: 0, filter: "blur(0px)" }, { opacity: 1, filter: "blur(3px)", duration: 0.9 }, 32.3);
+fade(["#s4-swirl", "#s4-fokus"], 33.2, 0.25);
+pop("#s4-t1", 33.33, 0.4); pop("#s4-t2", 35.14, 0.4);
+floaty("#s4-t1", 33.8, 3.0, 8); floaty("#s4-t2", 35.6, 1.3, 8);
+
+/* ---- S5 not weakness ---- */
+tl.fromTo("#s5-doc", { x: -300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: E3 }, 37.0);
+bob("#s5-doc", 37.4, 8.8, 1.4);
+slam("#s5-st1", 37.2, -6); draw("#s5-x1a", 37.9, 0.18); draw("#s5-x1b", 38.06, 0.18);
+slam("#s5-st2", 38.45, 5); draw("#s5-x2a", 39.55, 0.18); draw("#s5-x2b", 39.71, 0.18);
+tl.to(["#s5-st1", "#s5-st2", "#s5-x1a", "#s5-x1b", "#s5-x2a", "#s5-x2b"], { opacity: 0, x: 420, duration: 0.4, ease: "power2.in" }, 40.1);
+slam("#s5-hl", 40.14, -1);
+tl.to("#s5-foot", { opacity: 1, duration: 0.4 }, 42.4);
+pop("#s5-v1", 44.25, 0.4); pop("#s5-v2", 44.78, 0.4); pop("#s5-v3", 45.7, 0.4);
+pop("#s5-heart", 45.95, 0.3);
+
+/* ---- S6 small steps ---- */
+slam("#s6-hl", 46.44, -1);
+draw("#s6-stairs-l", 46.4, 0.6);
+tl.to(["#s6-stairs", "#s6-stairs-h"], { opacity: 1, duration: 0.4 }, 46.8);
+tl.fromTo("#s6-walk", { opacity: 0, x: -120 }, { opacity: 1, x: 0, duration: 0.4, ease: E3 }, 46.5);
+pop("#s6-i1", 47.88, 0.3); rise("#s6-l1", 47.95, 0.3); pop("#s6-sp1", 47.95, 0.4);
+tl.to("#s6-walk", { x: 320, y: -160, duration: 0.6, ease: "power2.inOut" }, 49.4);
+pop("#s6-i2", 49.56, 0.3); rise("#s6-l2", 49.62, 0.3); pop("#s6-sp2", 49.8, 0.4);
+tl.to("#s6-walk", { x: 610, y: -320, duration: 0.6, ease: "power2.inOut" }, 51.2);
+pop("#s6-i3", 51.38, 0.3); rise("#s6-l3", 51.44, 0.3); pop("#s6-sp3", 51.6, 0.4);
+tl.to("#s6-walk", { opacity: 0, duration: 0.3 }, 52.75); tl.to("#s6-happy", { opacity: 1, duration: 0.3 }, 52.75);
+tl.fromTo("#s6-walk", { rotation: -1.5 }, { rotation: 1.5, duration: 0.3, yoyo: true, repeat: 13, transformOrigin: "50% 100%" }, 46.6);
+
+/* ---- S7 treatment ---- */
+tl.fromTo("#s7-scene", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 53.4);
+cam("#s7-cam", 53.4, 8.55, 1.0, 1.04);
+slam("#s7-ban", 53.49, 0);
+rise("#s7-c1", 57.3, 0.4); rise("#s7-c2", 59.65, 0.4);
+slam("#s7-ok", 60.76, -3);
+
+/* ---- S8 red flag & help (still, calm) ---- */
+tl.fromTo("#s8-port", { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.5, ease: E3 }, 61.95);
+slam("#s8-hl", 65.06, -1);
+rise("#s8-card", 62.3, 0.5);
+tl.to("#s8-hi1", { opacity: 0.55, duration: 0.3 }, 65.95);
+tl.to("#s8-hi1", { opacity: 0, duration: 0.3 }, 69.0); tl.to("#s8-hi2", { opacity: 0.55, duration: 0.3 }, 69.09);
+tl.to("#s8-hi2", { opacity: 0, duration: 0.3 }, 70.15); tl.to("#s8-hi3", { opacity: 0.55, duration: 0.3 }, 70.22);
+
+/* ---- S9a colour returns ---- */
+tl.fromTo("#s9a-bubg", { "--rv": "100%" }, { "--rv": "0%", duration: 1.8, ease: "power1.inOut" }, 73.6);
+tl.fromTo(["#s9a-pat", "#s9a-doc", "#s9a-hill"], { filter: "grayscale(1) contrast(0.92) brightness(1.06)" }, { filter: "grayscale(0) contrast(1) brightness(1)", duration: 1.2 }, 74.2);
+tl.to("#s9a-conf", { opacity: 1, duration: 0.4 }, 75.0);
+cam("#s9a-cam", 73.5, 3.9, 1.05, 1.0);
+fade("#s9a-h1", 75.8, 0.2); slam("#s9a-h2", 75.98, -1);
+floaty("#s9a-bub", 73.5, 3.9, 8);
+
+/* ---- S9b outro ---- */
+tl.fromTo("#s9b-doc", { y: 220, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "back.out(1.3)" }, 77.4);
+bob("#s9b-doc", 77.9, 7.4, 1.6);
+slam("#s9b-cta", 77.46, 0);
+slam("#s9b-lock1", 79.94, -2); rise("#s9b-lock2", 80.6, 0.4);
+pop("#s9b-conf", 80.88, 0.5);
+floaty("#s9b-conf", 81.4, 3.9, 10);
+tl.to("#s9b-disc", { opacity: 1, duration: 0.4 }, 82.2);
+
+/* ---- lip-sync + blinks (one proxy tween; rigs read the per-frame tracks) ---- */
+const LS="0000000000222344444322444443112223444322443344333333210000000000000000224443321110022111333331000000000023444331144311124411444444330002211000000000001144434443004444444422244433210000000133114433312233321111110000000044333211333334431144433344200011111000000000033322344334443321002221111000000001144223322222223322220000000000000000033334430014431004433444333211333333334422111000000022004443334433441111122224444432000001441111443332222224422443334444411224433443112221122330004421100222244333330000011114433344444432234444444444443100000012233003444443333332114443300333321000000144333333200244322224433333333322211000000001344444410002443332211110011100000000000244444311332211001444443333333443321001224433443333333322100012222222221113434121111332001100000000001111113322211111000111000000000122344433344002223332221112222333333321100002223332222222111223332222223332322002221000000000044432211333333233321000000000033222110001333223333222222222211100000001344443333444322443333311223321111133222220023334443210000001440034433332333200000033333333443112332210000022211344421112221100233211122111100000000000144444332233333222200000111100000002211343210011110001220000221133110000000124431144431001112234433322222003321100000002334332100233222232333333322223211111221110000000002200444333332233222332211220000333222223321133333100110000000002333334220002221000000333332233211111222234331123322011100110012222200022221000222112222331122322222233220001222211000033222110001110000000000244322330013333333233311122113443222222223311222224422333222322221000112443333221222111000000003333444223333322111233210000000330033433333322222344444332333222233322000110033322113332221100000000012222243433322344444331000334443000222233320013333332210022232210002211100000000034433333443333322232112222222211133333221112222110000000022223300002200022222332221110000000012334433444443333423211223222232333333333211100000004433321134333344322200000110033310033333333320011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+const BL="0000000000000000000000000000000111000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111000000000000000000000000000000000000000000000000000000000000000000000000000111000000000000000000000000000000000000000000000000000000000000000000000000000011100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111000000000000000000000000000000000000000000000000000000000000000011100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111000000000000000000000000000000000000000000000000000000000000000000000000111000000000000000000000000000000000000000000000000000000000000000000000000000011100000000000000000000000000000000000000000000000000000000000000000000000000000111000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001110000000000000000000000000000000000000000000000000000000000001110000000000000000000000000000000000000000000000000000000000011100000000000000000000000000000000000000000000000000000000000000000000000000000000001110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111000000000000000000000000000000000000000000000000000000000000000000000001110000000000000000000000000000000000000000000000000000000000011100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111000000000000000000000000000000000000000000000000000000000000000000011100000";
+const RIGS = Array.from(document.querySelectorAll(".rig"));
+const NF = LS.length;
+const P = { f: 0 };
+tl.fromTo(P, { f: 0 }, { f: NF - 1, duration: (NF - 1) / 24, ease: "none", onUpdate() {
+  const i = Math.max(0, Math.min(NF - 1, Math.round(P.f)));
+  for (const r of RIGS) { if (r.dataset.talk === "1") r.setAttribute("data-m", LS[i]); r.setAttribute("data-b", i > NF - 30 ? "0" : BL[i]); }
+} }, 0);
+
+/* ---- captions ---- */
+tl.fromTo("#cap00-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},0.250);tl.to("#cap00-in",{opacity:0,duration:0.08},1.285);
+tl.fromTo("#cap01-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},1.395);tl.to("#cap01-in",{opacity:0,duration:0.08},2.377);
+tl.fromTo("#cap02-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},2.690);tl.to("#cap02-in",{opacity:0,duration:0.08},3.953);
+tl.fromTo("#cap03-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},4.306);tl.to("#cap03-in",{opacity:0,duration:0.08},5.386);
+tl.fromTo("#cap04-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},5.496);tl.to("#cap04-in",{opacity:0,duration:0.08},5.974);
+tl.fromTo("#cap05-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},6.179);tl.to("#cap05-in",{opacity:0,duration:0.08},7.618);
+tl.fromTo("#cap06-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},7.728);tl.to("#cap06-in",{opacity:0,duration:0.08},8.804);
+tl.fromTo("#cap07-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},9.050);tl.to("#cap07-in",{opacity:0,duration:0.08},10.604);
+tl.fromTo("#cap08-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},10.913);tl.to("#cap08-in",{opacity:0,duration:0.08},12.106);
+tl.fromTo("#cap09-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},12.216);tl.to("#cap09-in",{opacity:0,duration:0.08},13.513);
+tl.fromTo("#cap10-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},13.817);tl.to("#cap10-in",{opacity:0,duration:0.08},15.332);
+tl.fromTo("#cap11-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},15.442);tl.to("#cap11-in",{opacity:0,duration:0.08},15.887);
+tl.fromTo("#cap12-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},16.017);tl.to("#cap12-in",{opacity:0,duration:0.08},17.301);
+tl.fromTo("#cap13-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},17.411);tl.to("#cap13-in",{opacity:0,duration:0.08},18.694);
+tl.fromTo("#cap14-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},18.804);tl.to("#cap14-in",{opacity:0,duration:0.08},20.236);
+tl.fromTo("#cap15-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},20.346);tl.to("#cap15-in",{opacity:0,duration:0.08},21.754);
+tl.fromTo("#cap16-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},21.864);tl.to("#cap16-in",{opacity:0,duration:0.08},22.324);
+tl.fromTo("#cap17-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},22.434);tl.to("#cap17-in",{opacity:0,duration:0.08},24.082);
+tl.fromTo("#cap18-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},24.244);tl.to("#cap18-in",{opacity:0,duration:0.08},25.369);
+tl.fromTo("#cap19-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},25.479);tl.to("#cap19-in",{opacity:0,duration:0.08},25.940);
+tl.fromTo("#cap20-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},26.065);tl.to("#cap20-in",{opacity:0,duration:0.08},27.490);
+tl.fromTo("#cap21-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},27.753);tl.to("#cap21-in",{opacity:0,duration:0.08},28.994);
+tl.fromTo("#cap22-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},29.104);tl.to("#cap22-in",{opacity:0,duration:0.08},29.751);
+tl.fromTo("#cap23-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},29.861);tl.to("#cap23-in",{opacity:0,duration:0.08},31.738);
+tl.fromTo("#cap24-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},31.905);tl.to("#cap24-in",{opacity:0,duration:0.08},33.166);
+tl.fromTo("#cap25-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},33.276);tl.to("#cap25-in",{opacity:0,duration:0.08},34.331);
+tl.fromTo("#cap26-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},34.441);tl.to("#cap26-in",{opacity:0,duration:0.08},34.983);
+tl.fromTo("#cap27-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},35.093);tl.to("#cap27-in",{opacity:0,duration:0.08},36.287);
+tl.fromTo("#cap28-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},36.397);tl.to("#cap28-in",{opacity:0,duration:0.08},36.961);
+tl.fromTo("#cap29-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},37.150);tl.to("#cap29-in",{opacity:0,duration:0.08},38.119);
+tl.fromTo("#cap30-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},38.229);tl.to("#cap30-in",{opacity:0,duration:0.08},39.404);
+tl.fromTo("#cap31-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},39.514);tl.to("#cap31-in",{opacity:0,duration:0.08},39.973);
+tl.fromTo("#cap32-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},40.090);tl.to("#cap32-in",{opacity:0,duration:0.08},41.589);
+tl.fromTo("#cap33-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},41.699);tl.to("#cap33-in",{opacity:0,duration:0.08},42.821);
+tl.fromTo("#cap34-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},42.931);tl.to("#cap34-in",{opacity:0,duration:0.08},44.109);
+tl.fromTo("#cap35-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},44.219);tl.to("#cap35-in",{opacity:0,duration:0.08},45.557);
+tl.fromTo("#cap36-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},45.667);tl.to("#cap36-in",{opacity:0,duration:0.08},46.143);
+tl.fromTo("#cap37-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},46.393);tl.to("#cap37-in",{opacity:0,duration:0.08},47.716);
+tl.fromTo("#cap38-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},47.826);tl.to("#cap38-in",{opacity:0,duration:0.08},48.902);
+tl.fromTo("#cap39-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},49.012);tl.to("#cap39-in",{opacity:0,duration:0.08},49.405);
+tl.fromTo("#cap40-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},49.515);tl.to("#cap40-in",{opacity:0,duration:0.08},50.660);
+tl.fromTo("#cap41-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},50.770);tl.to("#cap41-in",{opacity:0,duration:0.08},51.221);
+tl.fromTo("#cap42-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},51.335);tl.to("#cap42-in",{opacity:0,duration:0.08},52.407);
+tl.fromTo("#cap43-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},52.517);tl.to("#cap43-in",{opacity:0,duration:0.08},53.278);
+tl.fromTo("#cap44-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},53.441);tl.to("#cap44-in",{opacity:0,duration:0.08},54.744);
+tl.fromTo("#cap45-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},54.854);tl.to("#cap45-in",{opacity:0,duration:0.08},55.946);
+tl.fromTo("#cap46-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},56.056);tl.to("#cap46-in",{opacity:0,duration:0.08},56.654);
+tl.fromTo("#cap47-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},56.764);tl.to("#cap47-in",{opacity:0,duration:0.08},58.320);
+tl.fromTo("#cap48-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},58.430);tl.to("#cap48-in",{opacity:0,duration:0.08},59.330);
+tl.fromTo("#cap49-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},59.440);tl.to("#cap49-in",{opacity:0,duration:0.08},60.596);
+tl.fromTo("#cap50-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},60.706);tl.to("#cap50-in",{opacity:0,duration:0.08},61.816);
+tl.fromTo("#cap51-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},61.986);tl.to("#cap51-in",{opacity:0,duration:0.08},63.416);
+tl.fromTo("#cap52-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},63.526);tl.to("#cap52-in",{opacity:0,duration:0.08},64.905);
+tl.fromTo("#cap53-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},65.015);tl.to("#cap53-in",{opacity:0,duration:0.08},65.794);
+tl.fromTo("#cap54-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},65.904);tl.to("#cap54-in",{opacity:0,duration:0.08},66.969);
+tl.fromTo("#cap55-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},67.079);tl.to("#cap55-in",{opacity:0,duration:0.08},70.065);
+tl.fromTo("#cap56-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},70.175);tl.to("#cap56-in",{opacity:0,duration:0.08},71.028);
+tl.fromTo("#cap57-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},71.138);tl.to("#cap57-in",{opacity:0,duration:0.08},73.390);
+tl.fromTo("#cap58-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},73.534);tl.to("#cap58-in",{opacity:0,duration:0.08},74.918);
+tl.fromTo("#cap59-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},75.028);tl.to("#cap59-in",{opacity:0,duration:0.08},75.824);
+tl.fromTo("#cap60-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},75.934);tl.to("#cap60-in",{opacity:0,duration:0.08},77.300);
+tl.fromTo("#cap61-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},77.410);tl.to("#cap61-in",{opacity:0,duration:0.08},78.616);
+tl.fromTo("#cap62-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},78.726);tl.to("#cap62-in",{opacity:0,duration:0.08},79.775);
+tl.fromTo("#cap63-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},79.885);tl.to("#cap63-in",{opacity:0,duration:0.08},80.723);
+tl.fromTo("#cap64-in",{opacity:0,scale:0.86,y:10},{opacity:1,scale:1,y:0,duration:0.14,ease:"back.out(2.2)"},80.833);tl.to("#cap64-in",{opacity:0,duration:0.08},81.983);
+
+window.__timelines["main"] = tl;
+</script>
+</body>
+</html>

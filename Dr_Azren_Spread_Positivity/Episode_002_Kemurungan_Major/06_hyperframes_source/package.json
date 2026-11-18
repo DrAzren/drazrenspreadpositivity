@@ -1,0 +1,9 @@
+{
+  "name": "dr-azren-ep002-kemurungan-major",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "npx --yes hyperframes@0.9.55 check",
+    "render": "npx --yes hyperframes@0.9.55 render"
+  }
+}

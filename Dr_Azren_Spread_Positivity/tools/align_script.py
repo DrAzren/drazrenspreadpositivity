@@ -12,7 +12,8 @@ import json, re, subprocess, sys
 
 TAG = re.compile(r"\[[^\]]+\]")
 # spoken form -> caption form (multi-word spoken tokens collapse into one caption word)
-DISPLAY = [("sembilan sembilan sembilan.", "999."), ("Doktor Azren.", "Dr. Azren.")]
+DISPLAY = [("sembilan sembilan sembilan.", "999."), ("Doktor Azren.", "Dr. Azren."),
+           ("satu lima lima lima lima,", "15555,")]
 
 
 def pauses(audio, noise="-38dB", d="0.18"):
