@@ -57,3 +57,9 @@ Decisions I took on your behalf (my recommended defaults; tell me to change any)
 | QA report | `18_quality_assurance_report.md` | ✅ |
 
 Storyboard note: scene times in `04_storyboard.md` were estimates. The build snaps every beat to the real word times (narration 81.6 s, starting at 0.3 s).
+
+---
+
+## v2 (19 Nov 2026): revision you requested ("lebih rich, elak elemen lama, avatar, tiada terpotong, kemaskan lip-sync")
+Plan + live quotes: `20_V2_PELAN_PENAMBAHBAIKAN.md` → you chose **Option A** (rename Kavitha → **Divya**).
+Spent: **Higgsfield 9.25** (exact quote, 0 retries), ElevenLabs 0. Final: `09_final_video_1080x1920.mp4` v2, 85.4 s. QA: `18_quality_assurance_report.md`.

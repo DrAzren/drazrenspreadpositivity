@@ -85,7 +85,7 @@ The master brief V2 replaces "Whiteboard 2.0" with **DoodleVerse**, the rich hat
 Docs: `00_system/05_DOODLEVERSE_reference_analysis.md`, `00_system/06_DOODLEVERSE_asset_and_animation_strategy.md`. Library: `Dr_Azren_DoodleVerse_Assets/`.
 
 ### Episode 002: Kemurungan Major (Major Depressive Disorder)
-✅ Produced (see `Episode_002_Kemurungan_Major/18_quality_assurance_report.md`). Spend: ElevenLabs 1,367 (narration, 1 take), Higgsfield **0**.
+✅ v2 produced 19 Nov (see `Episode_002_Kemurungan_Major/18_quality_assurance_report.md`). Spend: ElevenLabs 1,367 (narration, 1 take), Higgsfield **9.25** (one-time reusable library: Dr. Azren poses + visemes, 6 avatars, props).
 ⏸ Needs: your watch-through sign-off, then publishing approval (`17_metricool_schedule.md`).
 
 ### DoodleVerse daily runbook (from Ep002)
@@ -106,6 +106,10 @@ Docs: `00_system/05_DOODLEVERSE_reference_analysis.md`, `00_system/06_DOODLEVERS
 | `tools/qa_video.py <mp4> --max 90` | Technical QA (specs, duration, LUFS/peak, black/frozen frames) |
 | `tools/cutout.py IN OUT --box x0 y0 x1 y1 [--erase …] [--keep all]` | Transparent sprite from whiteboard art (border flood-fill) + origin sidecar JSON, 0 credits |
 | `tools/mouth_atlas.py VIDEO OUT --tref t --range t0 t1 --face … --mouth …` | Harvest 5 mouth states from the lipsync reference for one pose |
-| `tools/build_doodleverse.py <episode_dir>` | DoodleVerse build: captions (coloured bars), SRT, lip-sync + blink tracks |
+| `tools/build_doodleverse.py <episode_dir>` | DoodleVerse build: captions (coloured bars), SRT, text-driven viseme track, blink track |
+| `tools/sheet_cut.py SHEET OUT --names … [--layout row\|grid\|comp]` | Cut a white-background character/prop sheet into sprites |
+| `tools/viseme_rig.py HEADS POSES OUT pose…` | Mouth patches (rest/A/E/O/M/neutral) warped onto each pose + eye data |
+| `tools/sprite_edge_check.js index.html` | Fails if any character/prop leaves the canvas (no cut-offs) |
+| `Episode_002…/06_hyperframes_source/compose_v2.py` | Scene composer (helpers: `rig`, `sprite`, `prop`, `note`, `bubble`, `confetti`…): the template for new episodes |
 
 Render: `cd <episode>/06_hyperframes_source && npx -y hyperframes@0.9.55 render -o renders/out.mp4 --fps 30 --quality delivery`, then loudness-normalise to −14 LUFS (see the QA report).
