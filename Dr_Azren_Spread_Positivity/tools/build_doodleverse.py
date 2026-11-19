@@ -60,6 +60,50 @@ def lipsync(mp3, words, offset, fps, dur):
     return "".join(str(int(v)) for v in out)
 
 
+SPOKEN = {"15555": "satu lima lima lima lima", "999": "sembilan sembilan sembilan", "dr": "doktor",
+          "cbt": "si bi ti", "heal": "hil"}
+
+
+def visemes(mp3, words, offset, fps, dur):
+    """Text-driven visemes from the Malay spelling, timed by the aligned words.
+    R rest/closed smile, A open (a), E teeth (e, i), O round (o, u), M lips pressed (m, b, p),
+    N relaxed half-open (quiet or between close words). Mouth leads the audio by one frame;
+    every shape is held at least two frames."""
+    import re as _re
+    n = int(round(dur * fps))
+    vs = ["R"] * n
+    loud = lipsync(mp3, words, offset, fps, dur)  # 0..4 loudness levels, 0 outside words
+    for wi, w in enumerate(words):
+        key = _re.sub(r"[^\w]", "", w["text"]).lower()
+        txt = SPOKEN.get(key, key)
+        txt = _re.sub(r"[^a-z ]", "", txt.replace("-", " "))
+        syl = _re.findall(r"[^aeiou ]*[aeiou]+", txt) or ["a"]
+        f0 = int(round((w["start"] + offset) * fps)); f1 = max(f0 + 1, int(round((w["end"] + offset) * fps)))
+        span = (f1 - f0) / len(syl)
+        for k, sy in enumerate(syl):
+            a = f0 + int(round(k * span)); b = f0 + int(round((k + 1) * span))
+            vowel = _re.search(r"[aeiou]", sy).group(0)
+            cls = "A" if vowel == "a" else ("E" if vowel in "ei" else "O")
+            onset = sy[: sy.index(vowel)]
+            m_frames = max(1, int(round(0.3 * (b - a)))) if onset[-1:] in ("m", "b", "p") else 0
+            for f in range(a, min(b, n)):
+                vs[f] = "M" if f - a < m_frames else cls
+        if txt.rstrip()[-1:] in ("m", "b", "p") and f1 - 1 < n:
+            vs[f1 - 1] = "M"
+        nxt = words[wi + 1] if wi + 1 < len(words) else None
+        if nxt is not None and nxt["start"] - w["end"] < 0.12:  # tight word gap: stay relaxed
+            for f in range(f1, min(int(round((nxt["start"] + offset) * fps)), n)):
+                vs[f] = "N"
+    for f in range(n):  # very quiet frames inside words -> relaxed half-open
+        if vs[f] in "AEO" and loud[f] == "0":
+            vs[f] = "N"
+    vs = vs[1:] + ["R"]  # lead the audio by one frame
+    for f in range(1, n - 1):  # minimum hold of two frames
+        if vs[f] != vs[f - 1] and vs[f] != vs[f + 1]:
+            vs[f] = vs[f - 1]
+    return "".join(vs)
+
+
 def blinks(fps, dur, seed=7):
     n = int(round(dur * fps)); s = ["0"] * n
     state = seed
@@ -105,6 +149,10 @@ def main(ep):
     ls = lipsync(os.path.join(ep, "05_voiceover.mp3"), words, off, fps, dur)
     page = page.replace("/*@LIPSYNC*/", f'const LS="{ls}";')
     page = page.replace("/*@BLINK*/", f'const BL="{blinks(fps, dur)}";')
+    if "/*@VISEMES*/" in page:
+        vs = visemes(os.path.join(ep, "05_voiceover.mp3"), words, off, fps, dur)
+        page = page.replace("/*@VISEMES*/", f'const VS="{vs}";')
+        print("visemes", {k: vs.count(k) for k in "RAEOMN"})
     open(os.path.join(hf, "index.html"), "w").write(page)
     open(os.path.join(ep, "10_subtitles.srt"), "w").write("\n".join(srt))
     hist = {k: ls.count(str(k)) for k in range(5)}

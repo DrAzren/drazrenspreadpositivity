@@ -1,0 +1,258 @@
+<!doctype html>
+<!--
+  Dr. Azren | Spread Positivity — Episode 002 "Kemurungan Major" v2 (DoodleVerse V2 library)
+  SOURCE TEMPLATE. Do not edit index.html: run
+     python3 ../../tools/build_doodleverse.py ..      (from 06_hyperframes_source/)
+  which injects captions, the lip-sync track (LS) and the blink track (BL).
+  All times are absolute seconds; narration starts at VO = 0.3 s. 24 fps.
+  Characters are sprites cut from Dr. Azren's own reference art (0 AI credits).
+-->
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<style>
+@font-face{font-family:"DV Marker";src:url("assets/fonts/PermanentMarker-400.woff2") format("woff2")}
+@font-face{font-family:"DV Sans";font-weight:800;src:url("assets/fonts/Poppins-800.woff2") format("woff2")}
+@font-face{font-family:"DV Sans";font-weight:900;src:url("assets/fonts/Poppins-900.woff2") format("woff2")}
+@font-face{font-family:"DV Sans";font-weight:700;src:url("assets/fonts/Poppins-700.woff2") format("woff2")}
+@font-face{font-family:"DV Hand";src:url("assets/fonts/PatrickHand-400.woff2") format("woff2")}
+:root{--ink:#17161a;--board:#f7f6f2;--teal:#2fae9e;--cyan:#3cc4e6;--yellow:#ffd43b;--pink:#f08cb4;--coral:#ff6b5e;
+  --orange:#ff9f2e;--purple:#8f6cf0;--red:#e2382f;--grey:#8d9096;--greyt:#6d7076}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--board)}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:"DV Sans",sans-serif;color:var(--ink)}
+.full,.scene{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.cam{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}
+.abs{position:absolute}
+.svgl{position:absolute;left:0;top:0;overflow:visible}
+.hl{position:absolute;left:0;width:1080px;text-align:center;font-family:"DV Marker";color:var(--ink);line-height:.98;letter-spacing:2px;
+  text-shadow:-7px 6px 0 var(--cyan),7px 9px 0 var(--yellow);white-space:nowrap}
+.hl .g{color:var(--greyt);text-shadow:-7px 6px 0 #c3c6cb,7px 9px 0 #dfe1e4}
+.hl .t{color:#11897b}
+.lbl{position:absolute;font-family:"DV Marker";font-size:46px;color:var(--ink);white-space:nowrap}
+.hand{position:absolute;font-family:"DV Hand";color:var(--ink);white-space:nowrap}
+.u-y{background:linear-gradient(transparent 60%,var(--yellow) 60%,var(--yellow) 90%,transparent 90%)}
+.u-g{background:linear-gradient(transparent 60%,#c9ccd1 60%,#c9ccd1 90%,transparent 90%)}
+.draw{stroke-dasharray:1;stroke-dashoffset:0}
+.ink{stroke:var(--ink);stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
+.ink5{stroke:var(--ink);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.grey{filter:grayscale(1) contrast(.92) brightness(1.06)}
+/* reveal mask (raster or groups): animate --rv 100% -> 0% */
+.rv{-webkit-mask-image:linear-gradient(100deg,#000 0 44%,transparent 56% 100%);mask-image:linear-gradient(100deg,#000 0 44%,transparent 56% 100%);
+  -webkit-mask-size:260% 100%;mask-size:260% 100%;-webkit-mask-position:var(--rv,0%) 0;mask-position:var(--rv,0%) 0;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+.rvr{-webkit-mask-image:linear-gradient(100deg,transparent 0 44%,#000 56% 100%);mask-image:linear-gradient(100deg,transparent 0 44%,#000 56% 100%);
+  -webkit-mask-size:260% 100%;mask-size:260% 100%;-webkit-mask-position:var(--rv,100%) 0;mask-position:var(--rv,100%) 0;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+/* character rigs: sprite + mouth patches + eyelids, driven by LS/BL tracks */
+.rig{position:absolute}
+.rig .rs{position:absolute;left:0;top:0;transform-origin:0 0}
+.rig .rs img{position:absolute;display:block}
+.rig .mo{opacity:0}
+.rig[data-v="R"] .vR,.rig[data-v="A"] .vA,.rig[data-v="E"] .vE,.rig[data-v="O"] .vO,.rig[data-v="M"] .vM,.rig[data-v="N"] .vN{opacity:1}
+.rig .lid{opacity:0}
+.rig[data-b="1"] .lid{opacity:1}
+/* cards & stickers */
+.card{position:absolute;background:#fffdf7;border:6px solid var(--ink);border-radius:26px;box-shadow:9px 10px 0 var(--ink)}
+.sticker{position:absolute;font-family:"DV Sans";font-weight:900;color:#fff;-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;
+  border:6px solid var(--ink);border-radius:14px;box-shadow:8px 9px 0 var(--ink);text-align:center;white-space:nowrap}
+/* captions: reference style, one coloured bar per group, yellow keyword */
+.cap{position:absolute;left:70px;top:1238px;width:940px;text-align:center}
+.cap-in{display:inline-block;padding:10px 26px 14px;font-family:"DV Sans";font-weight:800;font-size:50px;line-height:1.05;color:#fff;
+  border:4px solid var(--ink);border-radius:8px;box-shadow:6px 7px 0 var(--ink);-webkit-text-stroke:2px var(--ink);paint-order:stroke fill;white-space:nowrap}
+.cap-in .k{color:var(--yellow)}
+.bar1{background:#18a999}.bar2{background:#f25f5c}.bar3{background:#7b61ff}.bar4{background:#2d9cdb}
+
+.hide{opacity:0}
+.spr{position:absolute;display:block}
+.prop{position:absolute;display:block;filter:drop-shadow(-7px 6px 0 rgba(60,196,230,.55)) drop-shadow(7px 8px 0 rgba(255,212,59,.6))}
+.note{position:absolute}
+.note-in{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;font-family:"DV Sans";font-weight:900;
+  color:#17161a;line-height:1.05;border:5px solid var(--ink);border-radius:6px;box-shadow:7px 8px 0 var(--ink)}
+.tape{position:absolute;left:50%;top:-18px;width:110px;height:34px;margin-left:-55px;opacity:.85;transform:rotate(-4deg);border:3px solid rgba(23,22,26,.5)}
+.bub{position:absolute}
+.bub-in{position:relative;padding:14px 22px;font-family:"DV Hand";color:#17161a;border:5px solid var(--ink);border-radius:28px;box-shadow:6px 7px 0 var(--ink);text-align:center;line-height:1.1}
+.bub-in i{position:absolute;bottom:-26px;width:34px;height:34px;background:inherit;border-right:5px solid var(--ink);border-bottom:5px solid var(--ink);transform:rotate(45deg) skew(10deg,10deg)}
+.tag{position:absolute}
+.tag-in{font-family:"DV Sans";font-weight:900;font-size:44px;color:#fff;-webkit-text-stroke:2.5px #17161a;paint-order:stroke fill;padding:8px 26px 10px 44px;border:5px solid var(--ink);
+  border-radius:8px 30px 30px 8px;box-shadow:6px 7px 0 var(--ink);position:relative}
+.tag-in::before{content:"";position:absolute;left:14px;top:50%;width:16px;height:16px;margin-top:-8px;border-radius:50%;background:#fff;border:4px solid var(--ink)}
+.banner{transform:rotate(-2deg);background:#18a999;border:6px solid #17161a;border-radius:12px;box-shadow:8px 9px 0 #17161a;text-align:center;font-family:"DV Sans";font-weight:900;
+  font-size:52px;color:#fff;-webkit-text-stroke:2.5px #17161a;paint-order:stroke fill;padding:10px 0 14px}
+.pin{position:absolute;width:30px;height:30px;border-radius:50%;background:#f25f5c;border:4px solid var(--ink);z-index:2}
+.hi{position:absolute;left:20px;width:520px;height:120px;border-radius:12px;background:#ffd43b;opacity:0}
+.blend-grey{position:absolute;left:0;top:0;width:1080px;height:1920px;background:#888;mix-blend-mode:saturation;opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="85.3" data-width="1080" data-height="1920">
+
+<!-- ===================== SHARED SVG DEFS ===================== -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="wob" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="7"/>
+      <feDisplacementMap in="SourceGraphic" scale="6"/>
+    </filter>
+    <pattern id="hatch" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
+      <line x1="0" y1="0" x2="0" y2="16" stroke="rgba(0,0,0,.20)" stroke-width="5"/>
+    </pattern>
+    <pattern id="hatchW" width="20" height="20" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)">
+      <line x1="0" y1="0" x2="0" y2="20" stroke="rgba(255,255,255,.4)" stroke-width="4"/>
+    </pattern>
+    <pattern id="scribG" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <rect width="22" height="22" fill="#b9bcc2"/><line x1="0" y1="0" x2="0" y2="22" stroke="#8d9096" stroke-width="7"/>
+    </pattern>
+    <marker id="ah" viewBox="0 0 20 20" refX="10" refY="10" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M2,3 L17,10 L2,17" fill="none" stroke="#2d9cdb" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <symbol id="music" viewBox="0 0 200 200">
+      <g stroke="#17161a" stroke-width="8" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M84,150 L84,44 L174,24 L174,128" fill="none"/>
+        <path d="M84,44 L174,24 L174,52 L84,72 Z" fill="#8f6cf0"/>
+        <ellipse cx="56" cy="152" rx="32" ry="23" transform="rotate(-22 56 152)" fill="#8f6cf0"/>
+        <ellipse cx="146" cy="132" rx="32" ry="23" transform="rotate(-22 146 132)" fill="#8f6cf0"/>
+      </g>
+      <ellipse cx="56" cy="152" rx="32" ry="23" transform="rotate(-22 56 152)" fill="url(#hatch)"/>
+      <ellipse cx="146" cy="132" rx="32" ry="23" transform="rotate(-22 146 132)" fill="url(#hatch)"/>
+      <path d="M40,140 q8,-8 18,-9 M130,120 q8,-8 18,-9" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none"/>
+    </symbol>
+    <symbol id="teh" viewBox="0 0 220 230">
+      <path d="M60,40 q10,-22 0,-34 M100,40 q12,-22 0,-36 M140,40 q10,-22 0,-34" stroke="#3cc4e6" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M152,95 q48,0 44,38 q-4,36 -50,34" fill="none" stroke="#17161a" stroke-width="9" stroke-linecap="round"/>
+      <path d="M30,52 L170,52 L156,205 q-2,14 -16,14 L60,219 q-14,0 -16,-14 Z" fill="#d98a3a" stroke="#17161a" stroke-width="8" stroke-linejoin="round"/>
+      <path d="M30,52 L170,52 L166,92 L34,92 Z" fill="#f7e9cc" stroke="#17161a" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M34,92 L166,92 L156,205 q-2,14 -16,14 L60,219 q-14,0 -16,-14 Z" fill="url(#hatch)"/>
+      <path d="M52,110 L60,196" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".7"/>
+      <circle cx="70" cy="72" r="6" fill="#fff" stroke="#17161a" stroke-width="3"/><circle cx="120" cy="66" r="8" fill="#fff" stroke="#17161a" stroke-width="3"/>
+    </symbol>
+    <symbol id="sparkle" viewBox="-50 -50 100 100">
+      <path d="M0,-44 Q7,-7 44,0 Q7,7 0,44 Q-7,7 -44,0 Q-7,-7 0,-44Z" fill="#ffd43b" stroke="#17161a" stroke-width="5" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="star" viewBox="-50 -50 100 100">
+      <path d="M0,-44 L12,-14 L43,-13 L19,7 L27,38 L0,20 L-27,38 L-19,7 L-43,-13 L-12,-14 Z" fill="#ff6b5e" stroke="#17161a" stroke-width="5" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="starP" viewBox="-50 -50 100 100">
+      <path d="M0,-44 L12,-14 L43,-13 L19,7 L27,38 L0,20 L-27,38 L-19,7 L-43,-13 L-12,-14 Z" fill="#8f6cf0" stroke="#17161a" stroke-width="5" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="drop" viewBox="-30 -50 60 90">
+      <path d="M0,-44 C10,-20 26,0 22,16 C18,34 -18,34 -22,16 C-26,0 -10,-20 0,-44Z" fill="#8fb3cf" stroke="#17161a" stroke-width="5"/>
+      <path d="M-9,8 q0,10 8,14" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="heart" viewBox="-60 -55 120 110">
+      <path d="M0,46 C-30,22 -54,4 -54,-18 C-54,-38 -38,-50 -22,-50 C-10,-50 -3,-44 0,-36 C3,-44 10,-50 22,-50 C38,-50 54,-38 54,-18 C54,4 30,22 0,46Z" fill="#ff6b5e" stroke="#17161a" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M-34,-24 q4,-12 16,-14" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="cloud" viewBox="0 0 380 200">
+      <path d="M70,170 C10,170 0,96 62,86 C66,30 150,10 182,62 C214,18 300,28 304,92 C362,90 378,170 318,172 Z" fill="#9aa0a8" stroke="#17161a" stroke-width="9" stroke-linejoin="round"/>
+      <path d="M70,170 C10,170 0,96 62,86 C66,30 150,10 182,62 C214,18 300,28 304,92 C362,90 378,170 318,172 Z" fill="url(#hatch)"/>
+      <path d="M60,110 q30,-30 70,-10 M190,80 q40,-22 80,6" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" opacity=".6"/>
+    </symbol>
+    <symbol id="phoneI" viewBox="0 0 100 100">
+      <path d="M28,10 l18,4 l4,22 l-12,8 q8,18 26,26 l8,-12 l22,4 l4,18 q-4,12 -18,12 q-40,-4 -62,-46 q-6,-24 10,-36z" fill="#2fae9e" stroke="#17161a" stroke-width="6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="cloudw" viewBox="0 0 380 200">
+      <path d="M70,170 C10,170 0,96 62,86 C66,30 150,10 182,62 C214,18 300,28 304,92 C362,90 378,170 318,172 Z" stroke="#17161a" stroke-width="8" stroke-linejoin="round"/>
+      <path d="M60,110 q30,-30 70,-10" stroke="#dff3fb" stroke-width="8" fill="none" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+
+<!-- ===================== BOARD (untimed) ===================== -->
+<div id="board" class="full" style="background:
+  radial-gradient(ellipse 420px 120px at 22% 7%,rgba(255,255,255,.95),rgba(255,255,255,0) 70%),
+  radial-gradient(ellipse 380px 110px at 78% 9%,rgba(255,255,255,.9),rgba(255,255,255,0) 70%),
+  radial-gradient(ellipse 900px 1200px at 50% 45%,#fbfaf7 0%,#f1f0ec 70%,#e7e6e2 100%)"></div>
+
+
+<!-- ===================== SCENES (generated by compose_v2.py) ===================== -->
+<!--@SCENES-->
+
+<!-- scene-change marker swipes -->
+<svg class="svgl" width="1080" height="1920" style="position:absolute;left:0;top:0;pointer-events:none">
+<!--@SWIPES-->
+</svg>
+
+<!-- ===================== CAPTIONS ===================== -->
+<!--@CAPTIONS-->
+
+<!-- ===================== AUDIO ===================== -->
+<audio id="vo" class="clip" data-start="0.3" data-track-index="20" data-volume="1" src="assets/audio/vo.mp3"></audio>
+<audio id="bgm" class="clip" data-start="0" data-duration="85.3" data-track-index="21" data-volume="1" src="assets/audio/bed.mp3"
+  data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0.6},{"t":0.35,"v":0.6},{"t":0.95,"v":0.2},{"t":61.6,"v":0.2},{"t":62.4,"v":0.11},{"t":73.2,"v":0.11},{"t":74.0,"v":0.24},{"t":81.6,"v":0.24},{"t":82.2,"v":0}]}]}'></audio>
+<audio id="bgm-out" class="clip" data-start="81.6" data-duration="3.7" data-media-start="0" data-track-index="29" data-volume="0.55" data-fade-in="0.4" data-fade-out="0.9" src="assets/audio/bed.mp3"></audio>
+<audio id="sx-1" class="clip" data-start="1.0" data-duration="0.57" data-track-index="30" data-volume="0.3" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sx-2" class="clip" data-start="2.75" data-duration="1.2" data-track-index="31" data-volume="0.22" src="assets/sfx/whoosh-cinematic.mp3"></audio>
+<audio id="sx-3" class="clip" data-start="4.36" data-duration="0.72" data-track-index="32" data-volume="0.35" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-4" class="clip" data-start="6.23" data-duration="0.72" data-track-index="33" data-volume="0.4" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-5" class="clip" data-start="7.78" data-duration="1.5" data-track-index="34" data-volume="0.22" src="assets/sfx/notification.mp3"></audio>
+<audio id="sx-6" class="clip" data-start="9.1" data-duration="0.72" data-track-index="35" data-volume="0.35" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-7" class="clip" data-start="9.5" data-duration="0.72" data-track-index="36" data-volume="0.3" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-8" class="clip" data-start="9.9" data-duration="0.72" data-track-index="37" data-volume="0.3" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-9" class="clip" data-start="13.72" data-duration="0.57" data-track-index="38" data-volume="0.4" src="assets/sfx/whoosh.mp3"></audio>
+<audio id="sx-10" class="clip" data-start="21.9" data-duration="0.72" data-track-index="39" data-volume="0.45" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-11" class="clip" data-start="22.85" data-duration="0.37" data-track-index="40" data-volume="0.4" src="assets/sfx/click-soft.mp3"></audio>
+<audio id="sx-12" class="clip" data-start="23.05" data-duration="0.37" data-track-index="41" data-volume="0.4" src="assets/sfx/click-soft.mp3"></audio>
+<audio id="sx-13" class="clip" data-start="23.25" data-duration="0.37" data-track-index="42" data-volume="0.4" src="assets/sfx/click-soft.mp3"></audio>
+<audio id="sx-14" class="clip" data-start="25.85" data-duration="1.8" data-track-index="43" data-volume="0.35" src="assets/sfx/sparkle.mp3"></audio>
+<audio id="sx-15" class="clip" data-start="29.9" data-duration="1.6" data-track-index="44" data-volume="0.2" src="assets/sfx/whoosh-cinematic.mp3"></audio>
+<audio id="sx-16" class="clip" data-start="33.3" data-duration="0.72" data-track-index="45" data-volume="0.3" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-17" class="clip" data-start="37.9" data-duration="0.37" data-track-index="46" data-volume="0.5" src="assets/sfx/click.mp3"></audio>
+<audio id="sx-18" class="clip" data-start="39.55" data-duration="0.37" data-track-index="47" data-volume="0.5" src="assets/sfx/click.mp3"></audio>
+<audio id="sx-19" class="clip" data-start="40.0" data-duration="0.57" data-track-index="48" data-volume="0.3" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sx-20" class="clip" data-start="44.25" data-duration="0.72" data-track-index="49" data-volume="0.35" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-21" class="clip" data-start="44.78" data-duration="0.72" data-track-index="50" data-volume="0.35" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-22" class="clip" data-start="45.7" data-duration="0.72" data-track-index="51" data-volume="0.35" src="assets/sfx/pop.mp3"></audio>
+<audio id="sx-23" class="clip" data-start="47.95" data-duration="1.8" data-track-index="52" data-volume="0.3" src="assets/sfx/sparkle.mp3"></audio>
+<audio id="sx-24" class="clip" data-start="49.8" data-duration="1.8" data-track-index="53" data-volume="0.3" src="assets/sfx/sparkle.mp3"></audio>
+<audio id="sx-25" class="clip" data-start="51.6" data-duration="1.8" data-track-index="54" data-volume="0.3" src="assets/sfx/sparkle.mp3"></audio>
+<audio id="sx-26" class="clip" data-start="53.5" data-duration="0.57" data-track-index="55" data-volume="0.35" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sx-27" class="clip" data-start="60.75" data-duration="1.4" data-track-index="56" data-volume="0.4" src="assets/sfx/chime.mp3"></audio>
+<audio id="sx-28" class="clip" data-start="62.3" data-duration="0.57" data-track-index="57" data-volume="0.25" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sx-29" class="clip" data-start="73.6" data-duration="1.8" data-track-index="58" data-volume="0.45" src="assets/sfx/sparkle.mp3"></audio>
+<audio id="sx-30" class="clip" data-start="80.85" data-duration="1.8" data-track-index="59" data-volume="0.4" src="assets/sfx/sparkle.mp3"></audio>
+<audio id="sw-1" class="clip" data-start="3.98" data-duration="0.57" data-track-index="70" data-volume="0.22" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sw-2" class="clip" data-start="13.48" data-duration="0.57" data-track-index="71" data-volume="0.22" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sw-3" class="clip" data-start="27.38" data-duration="0.57" data-track-index="72" data-volume="0.22" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sw-4" class="clip" data-start="36.78" data-duration="0.57" data-track-index="73" data-volume="0.22" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sw-5" class="clip" data-start="46.08" data-duration="0.57" data-track-index="74" data-volume="0.22" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sw-6" class="clip" data-start="53.18" data-duration="0.57" data-track-index="75" data-volume="0.22" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sw-7" class="clip" data-start="61.73" data-duration="0.57" data-track-index="76" data-volume="0.22" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sw-8" class="clip" data-start="73.28" data-duration="0.57" data-track-index="77" data-volume="0.22" src="assets/sfx/whoosh-short.mp3"></audio>
+<audio id="sw-9" class="clip" data-start="77.18" data-duration="0.57" data-track-index="78" data-volume="0.22" src="assets/sfx/whoosh-short.mp3"></audio>
+
+<script>
+window.__timelines = window.__timelines || {};
+const tl = gsap.timeline({ paused: true });
+const E3 = "power3.out";
+function pop(s, t, d = 0.35) { tl.fromTo(s, { scale: 0, opacity: 0, transformOrigin: "50% 50%" }, { scale: 1, opacity: 1, duration: d, ease: "back.out(2)" }, t); }
+function rise(s, t, d = 0.4) { tl.fromTo(s, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: d, ease: E3 }, t); }
+function fade(s, t, d = 0.3, to = 0) { tl.to(s, { opacity: to, duration: d }, t); }
+function draw(s, t, d = 0.45) { tl.fromTo(s, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: d, ease: "power1.inOut" }, t); }
+function slam(s, t, r = -2) { tl.fromTo(s, { scale: 1.5, opacity: 0, rotation: r - 6 }, { scale: 1, opacity: 1, rotation: r, duration: 0.32, ease: "back.out(1.8)" }, t); }
+function bob(s, t, d, a = 1.6) { const n = Math.max(1, Math.round(d / 1.4)); tl.fromTo(s, { rotation: -a / 2 }, { rotation: a / 2, duration: d / n, yoyo: true, repeat: n - 1, ease: "sine.inOut", transformOrigin: "50% 100%" }, t); }
+function floaty(s, t, d, a = 10) { const n = Math.max(2, 2 * Math.round(d / 2.4)); tl.fromTo(s, { y: 0 }, { y: -a, duration: d / n, yoyo: true, repeat: n - 1, ease: "sine.inOut" }, t); }
+function cam(s, t, d, from, to) { tl.fromTo(s, { scale: from }, { scale: to, duration: d, ease: "sine.inOut" }, t); }
+
+/*@SCENE_TWEENS*/
+
+/* ---- lip-sync (text-driven visemes) + blinks: one proxy tween drives every Dr. Azren rig ---- */
+/*@VISEMES*/
+/*@BLINK*/
+const RIGS = Array.from(document.querySelectorAll(".rig"));
+const NF = VS.length;
+const P = { f: 0 };
+tl.fromTo(P, { f: 0 }, { f: NF - 1, duration: (NF - 1) / 24, ease: "none", onUpdate() {
+  const i = Math.max(0, Math.min(NF - 1, Math.round(P.f)));
+  const b = i > NF - 30 ? "0" : BL[i];
+  for (const r of RIGS) { r.setAttribute("data-v", VS[i]); r.setAttribute("data-b", b); }
+} }, 0);
+
+/* ---- captions ---- */
+/*@CAPTION_TWEENS*/
+
+window.__timelines["main"] = tl;
+</script>
+</body>
+</html>

@@ -2,19 +2,21 @@
 <html lang="ms">
 <head>
 <meta charset="utf-8">
-<title>Ep002 thumbnail</title>
+<title>Ep002 thumbnail v2</title>
 <link rel="stylesheet" href="../../Dr_Azren_DoodleVerse_Assets/templates/doodleverse.css">
 <style>
   .sub{position:absolute;left:50%;transform:translateX(-50%) rotate(-2deg);top:640px;white-space:nowrap;
     font-family:"DV Sans";font-weight:900;font-size:58px;color:#fff;background:#f25f5c;border:6px solid var(--ink);border-radius:12px;
     box-shadow:8px 9px 0 var(--ink);padding:8px 34px 12px;-webkit-text-stroke:2.5px var(--ink);paint-order:stroke fill}
-  .brand{position:absolute;left:0;width:1080px;top:1740px;height:180px;padding-top:44px;text-align:center;font-family:"DV Sans";font-weight:900;font-size:50px;color:#fff;background:#18a999;border-top:7px solid var(--ink);-webkit-text-stroke:2px var(--ink);paint-order:stroke fill}
+  .brand{position:absolute;left:0;width:1080px;top:1760px;height:160px;padding-top:36px;text-align:center;font-family:"DV Sans";font-weight:900;font-size:50px;color:#fff;
+    background:#18a999;border-top:7px solid var(--ink);-webkit-text-stroke:2px var(--ink);paint-order:stroke fill}
+  .prop{filter:drop-shadow(-7px 6px 0 rgba(60,196,230,.55)) drop-shadow(7px 8px 0 rgba(255,212,59,.6))}
 </style>
 </head>
 <body>
 <div class="stage">
-  <div class="headline" style="top:310px;font-size:126px;white-space:nowrap">KEMURUNGAN</div>
-  <div class="headline" style="top:448px;font-size:150px;white-space:nowrap;color:#11897b">MAJOR</div>
+  <div class="headline" style="top:300px;font-size:126px;white-space:nowrap">KEMURUNGAN</div>
+  <div class="headline" style="top:438px;font-size:150px;white-space:nowrap;color:#11897b">MAJOR</div>
   <div class="sub">Bukan sekadar sedih</div>
 
   <svg width="1080" height="1920" viewBox="0 0 1080 1920" style="position:absolute;inset:0">
@@ -28,20 +30,21 @@
    <g filter="url(#wob)">
     <use href="#sparkle" x="40" y="250" width="70" height="70"/><use href="#sparkle" x="960" y="270" width="80" height="80"/>
     <use href="#star" x="40" y="560" width="60" height="60"/><use href="#star" x="980" y="560" width="56" height="56"/>
-    <path d="M60,780 l26,-38 l8,30 l30,-40" stroke="#3cc4e6" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M90,860 q20,-24 46,-22 M84,900 q26,-12 50,-4" stroke="#ff9f2e" stroke-width="8" fill="none" stroke-linecap="round"/>
-    <!-- grey rain cloud over the patient -->
-    <g transform="translate(600,760) scale(1.0)">
+    <use href="#sparkle" x="380" y="860" width="60" height="60"/><use href="#star" x="60" y="820" width="50" height="50"/>
+    <path d="M60,1000 l26,-38 l8,30 l30,-40" stroke="#3cc4e6" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <g transform="translate(640,790)">
      <path d="M70,170 C10,170 0,96 62,86 C66,30 150,10 182,62 C214,18 300,28 304,92 C362,90 378,170 318,172 Z" fill="#9aa0a8" stroke="#17161a" stroke-width="9" stroke-linejoin="round"/>
      <path d="M70,170 C10,170 0,96 62,86 C66,30 150,10 182,62 C214,18 300,28 304,92 C362,90 378,170 318,172 Z" fill="url(#hatch)"/>
     </g>
-    <use href="#drop" x="680" y="940" width="36" height="54"/><use href="#drop" x="770" y="958" width="36" height="54"/><use href="#drop" x="860" y="942" width="36" height="54"/>
-    
+    <use href="#drop" x="720" y="970" width="34" height="52"/><use href="#drop" x="800" y="990" width="34" height="52"/><use href="#drop" x="880" y="972" width="34" height="52"/>
+    <path d="M30,1728 C250,1716 520,1740 760,1730 S1000,1734 1050,1728" stroke="#17161a" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <ellipse cx="250" cy="1730" rx="150" ry="16" fill="rgba(23,22,26,.13)"/><ellipse cx="820" cy="1730" rx="140" ry="16" fill="rgba(23,22,26,.13)"/>
    </g>
   </svg>
 
-  <img class="sprite" src="../../Dr_Azren_DoodleVerse_Assets/characters/dr_azren/drazren_bust_pointing.png" style="left:-30px;top:850px;width:640px">
-  <img class="sprite" src="../../Dr_Azren_DoodleVerse_Assets/characters/patient_hijab/patient_bust_worried_deep.png" style="left:470px;top:960px;width:600px">
+  <img class="sprite" src="../06_hyperframes_source/assets/img/v2/drazren_point_marker.png" style="left:110px;top:866px;width:286px">
+  <img class="sprite prop" src="../06_hyperframes_source/assets/img/v2/plant_wilted.png" style="left:420px;top:1535px;width:200px">
+  <img class="sprite" src="../06_hyperframes_source/assets/img/v2/amir_low.png" style="left:693px;top:851px;width:255px">
   <div class="brand">Dr. Azren | Spread Positivity</div>
 </div>
 </body>
