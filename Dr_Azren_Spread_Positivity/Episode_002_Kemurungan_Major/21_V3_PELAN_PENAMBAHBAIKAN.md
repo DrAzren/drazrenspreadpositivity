@@ -79,3 +79,11 @@ Setiap avatar dipotong kepada lapisan bersendi: **kepala, badan, lengan, kaki**.
 | Animasi, doodle, rig, render | 0 (tempatan) | — |
 
 Kesan sampingan semakan harga: satu flow ElevenLabs kosong (`jHc207MeA8l8atznvcIw`) telah dicipta. Tiada apa dijana dan tiada caj.
+
+---
+
+## Kemas kini: tiada sebutan Befrienders / Talian HEAL (arahan anda)
+
+- Narration: ayat helpline dipotong daripada audio sedia ada (**0 kredit**, tiada suara baharu). Video menjadi ~81.3 s.
+- Babak 8 v3: kad bantuan diganti dengan kad **"Jangan tunggu"**: 🚨 **999** jika dalam bahaya, 🩺 **jumpa doktor segera**, dan "Rasa tak boleh berfungsi langsung? Jumpa doktor segera". Dr. Azren badan penuh di sebelah kad.
+- Kapsyen TikTok/IG/FB/YT: helpline dibuang; 999 dan "jumpa doktor" dikekalkan.

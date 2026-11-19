@@ -33,3 +33,13 @@
 2. **"Mesej kawan pun dibiarkan"**: chosen over "malas nak balas", so the script never pairs depression with "malas" except to deny it.
 3. **Befrienders' number is shown, not spoken.** A 10-digit number read aloud costs ~4 s and isn't remembered. Say if you want it spoken.
 4. **Pronunciation risks to check by ear after generation:** "CBT" (English letters), "Befrienders", "Talian HEAL". If one is wrong, fix only that sentence (~60–200 credits), never the whole take.
+
+---
+
+## v3 change (19 Nov 2026, your instruction: do not mention Befrienders or Talian HEAL)
+
+The sentence **"Hubungi Talian HEAL, satu lima lima lima lima, atau Befrienders."** is removed. No new voice was generated: it was cut from the approved take inside its natural pauses, and a 0.49 s pause now joins the two sentences.
+
+Scene 8 now reads: *[serious]* Dan jika terlintas fikiran untuk mencederakan diri, jangan tunggu. Jika dalam bahaya, terus hubungi sembilan sembilan sembilan.
+
+Files: `05_voiceover_v3.mp3` (77.7 s) and `05_voiceover_words_v3.json` (178 words). The original take and timings are kept.

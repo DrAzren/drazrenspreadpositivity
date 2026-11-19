@@ -52,3 +52,10 @@ No statistics are used in the script, so no figure can be wrong. (S1 gives 5.2 %
 - [x] Help-seeking is shown as normal and effective, with hope and recovery messages after the red flag.
 - [x] Help lines are on screen long enough to read (≥ 4 s) and repeated in every platform caption.
 - [x] Visual tone at the red flag: calm, teal (help) colour, not red alarm imagery; no distressing image of self-harm.
+
+---
+
+## v3 change: helplines removed (your instruction, 19 Nov 2026)
+
+Talian HEAL 15555 and Befrienders were removed from the narration, the screen and the platform captions. Still present: **"jangan tunggu"**, **999 for immediate danger** (narration + screen), "jumpa doktor segera", and "Rasa tak boleh berfungsi langsung? Jumpa doktor segera."
+Safe-messaging note (S7): media guidance recommends listing a help resource with self-harm content. 999 plus seeing a doctor meets that minimum. TikTok, Instagram and YouTube also attach their own crisis prompts to suicide/self-harm-related searches.
