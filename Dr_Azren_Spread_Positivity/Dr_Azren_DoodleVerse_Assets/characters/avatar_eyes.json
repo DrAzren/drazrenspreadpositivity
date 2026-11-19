@@ -1,0 +1,82 @@
+{
+ "amir_relieved": {
+  "eyes": [
+   {
+    "x": 165.8,
+    "y": 180.2,
+    "skin": "#f9a055"
+   },
+   {
+    "x": 251.3,
+    "y": 162.8,
+    "skin": "#fcc178"
+   }
+  ],
+  "eye_r": 33.9,
+  "angle": -11.5
+ },
+ "meiling_relieved": {
+  "eyes": [
+   {
+    "x": 179.4,
+    "y": 163.4,
+    "skin": "#fca58b"
+   },
+   {
+    "x": 271.2,
+    "y": 147.7,
+    "skin": "#fec4a1"
+   }
+  ],
+  "eye_r": 36.9,
+  "angle": -9.7
+ },
+ "pakrahman_relieved": {
+  "eyes": [
+   {
+    "x": 164.6,
+    "y": 221.5,
+    "skin": "#fdb877"
+   },
+   {
+    "x": 244.6,
+    "y": 199.6,
+    "skin": "#fbbf80"
+   }
+  ],
+  "eye_r": 29.0,
+  "angle": -15.3
+ },
+ "danish_relieved": {
+  "eyes": [
+   {
+    "x": 181.7,
+    "y": 198.5,
+    "skin": "#fda871"
+   },
+   {
+    "x": 259.7,
+    "y": 176.2,
+    "skin": "#fcc383"
+   }
+  ],
+  "eye_r": 30.7,
+  "angle": -15.9
+ },
+ "kakros_relieved": {
+  "eyes": [
+   {
+    "x": 134.2,
+    "y": 179.4,
+    "skin": "#feaa7a"
+   },
+   {
+    "x": 217.4,
+    "y": 158.6,
+    "skin": "#fecc9a"
+   }
+  ],
+  "eye_r": 28.2,
+  "angle": -14.0
+ }
+}

@@ -48,3 +48,40 @@ MP3s are git-ignored. Re-download them from the ElevenLabs flow `TlpWf0woI5ODbZb
 - Mouth atlas (closed / small / teeth / round / wide) harvested from REF for both characters, plus eyelid patches.
 - `props_svg/` for depression: grey cloud with drizzle, battery (full → low), bed + moon (sleep), plate (appetite), phone with unread messages, brain (no bell), sun + hills colour return, breathing circle, "15555 / 999" helpline card.
 - More poses from REF: walking entrance (4–6 s), waving (86–88 s), serious (40–47 s), patient breathing calm (60–65 s), relieved (86 s).
+
+---
+
+## V2 library (19 Nov 2026): generated once, reusable every episode
+
+Generated with Higgsfield `gpt_image_2_6` using your poster as the style reference, then cut locally (`tools/sheet_cut.py`). Source sheets: `source_sheets/`.
+
+| Sheet | Job | Settings | Credits |
+|---|---|---|---|
+| `sheet1_drazren_poses_mouths.png` | `12e84eb8-d367-4a96-a9d7-fc4a5f4140d0` | high, 2K, 16:9, refs: poster + full-body frame | 2.75 |
+| `sheet2_amir_meiling_divya.png` | `3ce0f01a-6173-4326-a591-2411969f817b` | high, 2K, 16:9, ref: poster | 2.75 |
+| `sheet3_pakrahman_danish_kakros.png` | `bd251a40-69bf-4b78-95be-7491b1964f19` | high, 2K, 16:9, ref: poster | 2.75 |
+| `sheet4_props_ep002.png` | `4d2614bf-3d2c-44b6-a068-6eac11200692` | medium, 2K, 16:9, ref: poster | 1.00 |
+
+### Dr. Azren v2 (`characters/dr_azren/v2/`): all full body, head to sneakers
+`drazren_think`, `drazren_point_marker`, `drazren_clipboard`, `drazren_welcome`, `drazren_wave`
+- `heads/head_{rest,A,E,O,M,neutral}.png`: the viseme close-ups
+- `visemes/<pose>/mouth_{rest,A,E,O,M,neutral}.png`: mouth patches warped onto each pose (`tools/viseme_rig.py`: pupil-based scale and rotation, skin colour-matched)
+- `visemes/rigs.json`: mouth box, pupils, eye radius, head angle and eyelid colour per pose
+
+### Avatars: each in two states, `_low` (sad/tired) and `_relieved` (hopeful)
+| Folder | Character | Use |
+|---|---|---|
+| `characters/amir/` | **Amir**, Malay man ~28, office shirt + lanyard | Ep002 lead |
+| `characters/meiling/` | **Mei Ling**, Chinese Malaysian student ~21, mint hoodie | Friend / support |
+| `characters/divya/` | **Divya**, Indian Malaysian working mother ~38, plum kurta | Stress, burnout, postpartum |
+| `characters/pakrahman/` | **Pak Rahman**, Malay grandfather ~65, songkok + sarong | Elderly, loneliness, dementia |
+| `characters/danish/` | **Danish**, Malay schoolboy ~15, school uniform | Teens, exams, bullying |
+| `characters/kakros/` | **Kak Ros**, Malay woman ~45, tudung bawal + baju kurung | Caregivers, menopause |
+
+`amir_low.png`: the generator drew purple under-eye shadows that read as bruises; recoloured locally to a tired brown.
+
+### Ep002 props (`props/ep002/`)
+`bed_messy`, `desk_laptop`, `guitar_dusty`, `plant_wilted`, `plant_bloom`, `window_rain`, `alarm_clock`, `stepping_stones`, `park_bench`
+
+### Rule from V2: no cut-off characters
+Use only full-body sprites, with feet on a drawn floor line. A character may stand behind a fully drawn prop (desk), but never against the frame edge or behind a crop. `tools/sprite_edge_check.js` flags any sprite that leaves the canvas.
